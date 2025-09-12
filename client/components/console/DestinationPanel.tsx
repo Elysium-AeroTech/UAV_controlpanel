@@ -96,7 +96,7 @@ export function DestinationPanel({
                 <div className="text-xs text-muted-foreground mb-1">Navigator Code (to lock path)</div>
                 <Input value={navCode} onChange={(e) => setNavCode(e.target.value)} placeholder="Enter code" />
               </div>
-              <Button variant="secondary" disabled={!canLockPath}><Lock className="h-4 w-4 mr-2" /> Lock Path</Button>
+              <Button variant="secondary" disabled={!canLockPath} onClick={() => { if (canLockPath) onSet(draftLat, draftLon); }}><Lock className="h-4 w-4 mr-2" /> Lock Path</Button>
             </div>
           )}
           {role !== "Navigator" && (
