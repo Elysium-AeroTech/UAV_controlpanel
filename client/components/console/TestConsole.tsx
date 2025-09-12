@@ -63,10 +63,6 @@ export function TestConsole({
       </div>
 
       <div className="p-2 grid grid-cols-1 gap-2 text-sm">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="twoperson">Require Two-Person</Label>
-          <Switch id="twoperson" checked={requireTwoPerson} onCheckedChange={setRequireTwoPerson} />
-        </div>
         <Separator />
         <div>
           <Label>Inject RPM</Label>
