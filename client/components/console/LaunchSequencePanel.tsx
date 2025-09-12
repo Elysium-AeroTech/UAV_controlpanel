@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, XCircle, Rocket, Mic } from "lucide-react";
+import { CheckCircle2, XCircle, Rocket, Siren, ShieldAlert } from "lucide-react";
+import { VoiceAuth } from "@/components/console/VoiceAuth";
 
 function Row({ label, ok }: { label: string; ok: boolean }) {
   return (
@@ -17,6 +20,8 @@ function Row({ label, ok }: { label: string; ok: boolean }) {
   );
 }
 
+const COMMANDER_CODE = "980752";
+
 export function LaunchSequencePanel({
   emailOk,
   commanderOk,
@@ -26,6 +31,7 @@ export function LaunchSequencePanel({
   distanceKm,
   telemetryOk,
   onLaunch,
+  role,
 }: {
   emailOk: boolean;
   commanderOk: boolean;
@@ -35,9 +41,24 @@ export function LaunchSequencePanel({
   distanceKm: number | null;
   telemetryOk: boolean;
   onLaunch: () => void;
+  role?: "Commander" | "Navigator" | "Armer";
 }) {
   const withinRange = distanceKm == null ? false : distanceKm <= 80;
-  const allOk = emailOk && commanderOk && consentOk && safetyVerified && safetyArmed && telemetryOk;
+  const preflightOk = emailOk && commanderOk && consentOk && safetyVerified && safetyArmed && telemetryOk && withinRange;
+  const [accepted, setAccepted] = useState(false);
+  const [voiceOk, setVoiceOk] = useState(false);
+  const [finalCode, setFinalCode] = useState("");
+  const canCommanderLaunch = preflightOk && accepted && (role === "Commander" ? true : false) && (voiceOk || true);
+  const requireCmdCodeForNav = role === "Navigator";
+  const isArmer = role === "Armer";
+
+  const handleLaunch = () => {
+    if (isArmer) return; // Restricted
+    if (requireCmdCodeForNav) {
+      if (finalCode !== COMMANDER_CODE) return;
+    }
+    onLaunch();
+  };
 
   return (
     <div className="grid lg:grid-cols-3 gap-4">
@@ -45,7 +66,7 @@ export function LaunchSequencePanel({
         <CardHeader>
           <CardTitle>Preflight Checklist</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="space-y-3">
           <Row label="Commander Login" ok={emailOk} />
           <Row label="Commander's Code" ok={commanderOk} />
           <Row label="Two-Person Consent (or bypassed)" ok={consentOk} />
@@ -59,8 +80,24 @@ export function LaunchSequencePanel({
             </Alert>
           )}
           <Separator />
-          <div className="flex justify-end">
-            <Button size="lg" disabled={!allOk} onClick={onLaunch}>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Button variant="outline"><Siren className="h-4 w-4 mr-2" /> Dry Run</Button>
+            <Button variant="outline" onClick={() => setAccepted((v) => !v)} className={accepted ? "border-emerald-400" : ""}>
+              <ShieldAlert className="h-4 w-4 mr-2" /> {accepted ? "Risk Acknowledged" : "Acknowledge Risks"}
+            </Button>
+          </div>
+          {requireCmdCodeForNav && (
+            <div className="flex items-end gap-2 max-w-sm">
+              <div className="flex-1">
+                <div className="text-xs text-muted-foreground mb-1">Commander Emergency Code</div>
+                <Input value={finalCode} onChange={(e) => setFinalCode(e.target.value)} placeholder="Enter code to authorize" />
+              </div>
+              <Button variant="secondary" disabled={finalCode !== COMMANDER_CODE}>Validate</Button>
+            </div>
+          )}
+          <div className="flex justify-between">
+            <Button variant="destructive"><Siren className="h-5 w-5 mr-2" /> Emergency Abort</Button>
+            <Button size="lg" disabled={isArmer ? true : requireCmdCodeForNav ? !(preflightOk && accepted && finalCode === COMMANDER_CODE) : !canCommanderLaunch} onClick={handleLaunch}>
               <Rocket className="h-5 w-5 mr-2" /> Initiate Launch
             </Button>
           </div>
@@ -69,15 +106,10 @@ export function LaunchSequencePanel({
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Mic className="h-5 w-5 text-primary" /> Voice Authentication</CardTitle>
+          <CardTitle>Voice Authentication</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
-          <p>Hook your Python voice-auth module here. This UI is a placeholder for the integration point.</p>
-          <ul className="list-disc list-inside">
-            <li>Run model to verify commander’s voice</li>
-            <li>Expose boolean result to enable final launch</li>
-          </ul>
-          <p>We can wire a backend endpoint to receive the signal when you’re ready.</p>
+        <CardContent className="space-y-2">
+          <VoiceAuth onVerified={(r) => setVoiceOk(r.access === "Granted")} />
         </CardContent>
       </Card>
     </div>
