@@ -108,6 +108,10 @@ export default function Index() {
                     <div className="mt-3">
                       <Button disabled={!isAuthed}>Enter Command</Button>
                     </div>
+                    <div className="mt-3">
+                      <div className="text-xs text-muted-foreground">Voice Authentication (Commander only)</div>
+                      <div className="mt-2">/* Voice auth widget available in commander portal only */</div>
+                    </div>
                   </div>
                 </div>
               )}
