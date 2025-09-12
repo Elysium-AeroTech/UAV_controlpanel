@@ -64,16 +64,23 @@ export function VoiceAuth({ onVerified }: { onVerified?: (r: AuthResponse) => vo
     try {
       setLoading(true);
       const form = new FormData();
-      form.append("audio", audio);
+      // Flask expects field name 'voice_file'
+      form.append("voice_file", audio, "attempt.wav");
       const res = await fetch("/authenticate", { method: "POST", body: form });
-      const json = (await res.json()) as AuthResponse;
-      if (!res.ok) {
+      const json = await res.json();
+      // Flask returns { status, similarity, result } or error
+      if (!res.ok || json?.status === "error") {
         setError(json?.message || `Server error (${res.status})`);
         setLastResult(null);
         return;
       }
-      setLastResult(json);
-      onVerified?.(json);
+      const parsed: AuthResponse = {
+        similarity: typeof json.similarity === "number" ? json.similarity : undefined,
+        access: json.result === "Access Granted" ? "Granted" : json.result === "Access Denied" ? "Denied" : undefined,
+        message: json.message || json.result || undefined,
+      };
+      setLastResult(parsed);
+      onVerified?.(parsed);
     } catch (e: any) {
       setError(e?.message || "Network error while authenticating");
       setLastResult(null);
