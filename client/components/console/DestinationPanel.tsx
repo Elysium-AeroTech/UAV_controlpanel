@@ -2,10 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Crosshair, Target, MapPin } from "lucide-react";
+import { Crosshair, Target, MapPin, Lock } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 const INDIA_BOUNDS = { latMin: 6, latMax: 36, lonMin: 68, lonMax: 98 };
+const NAVIGATOR_CODE = "246810";
 
 function project(lat: number, lon: number) {
   const x = ((lon - INDIA_BOUNDS.lonMin) / (INDIA_BOUNDS.lonMax - INDIA_BOUNDS.lonMin)) * 100;
@@ -33,6 +34,7 @@ export function DestinationPanel({
   curLon,
   onSet,
   onSetCurrent,
+  role,
 }: {
   lat: number;
   lon: number;
@@ -40,10 +42,12 @@ export function DestinationPanel({
   curLon: number | null;
   onSet: (lat: number, lon: number) => void;
   onSetCurrent: (lat: number, lon: number) => void;
+  role?: "Commander" | "Navigator" | "Armer";
 }) {
   const [draftLat, setDraftLat] = useState(lat);
   const [draftLon, setDraftLon] = useState(lon);
   const [distanceKm, setDistanceKm] = useState<number | null>(null);
+  const [navCode, setNavCode] = useState("");
 
   useEffect(() => {
     if (curLat != null && curLon != null) {
@@ -60,6 +64,8 @@ export function DestinationPanel({
       onSetCurrent(pos.coords.latitude, pos.coords.longitude);
     });
   };
+
+  const canLockPath = role === "Navigator" ? navCode === NAVIGATOR_CODE : true;
 
   return (
     <div className="grid lg:grid-cols-2 gap-4">
@@ -80,10 +86,22 @@ export function DestinationPanel({
           </div>
           <div className="flex gap-2">
             <Button onClick={() => onSet(draftLat, draftLon)} className="flex-1">
-              <Target className="h-4 w-4 mr-2" /> Confirm Coordinates
+              <Target className="h-4 w-4 mr-2" /> Preview Path
             </Button>
             <Button variant="outline" onClick={() => { setDraftLat(lat); setDraftLon(lon); }}>Reset</Button>
           </div>
+          {role === "Navigator" && (
+            <div className="flex items-end gap-2 max-w-sm">
+              <div className="flex-1">
+                <div className="text-xs text-muted-foreground mb-1">Navigator Code (to lock path)</div>
+                <Input value={navCode} onChange={(e) => setNavCode(e.target.value)} placeholder="Enter code" />
+              </div>
+              <Button variant="secondary" disabled={!canLockPath}><Lock className="h-4 w-4 mr-2" /> Lock Path</Button>
+            </div>
+          )}
+          {role !== "Navigator" && (
+            <div className="text-xs text-muted-foreground">Commander can lock without navigator code.</div>
+          )}
           <div className="flex gap-2">
             <Button variant="outline" onClick={useGeolocation}><MapPin className="h-4 w-4 mr-2" /> Use Current Location</Button>
           </div>
@@ -98,14 +116,20 @@ export function DestinationPanel({
 
       <Card>
         <CardHeader>
-          <CardTitle>Map of India</CardTitle>
+          <CardTitle>Route Preview</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="relative h-72 w-full rounded border border-primary/40 bg-black/60 overflow-hidden">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/India_outline.svg" alt="India Map" className="absolute inset-0 h-full w-full object-contain opacity-50" />
+            <div className="absolute inset-0 pointer-events-none opacity-50" style={{ backgroundImage: "linear-gradient(rgba(0,255,120,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,120,0.06) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/India_outline.svg" alt="India Map" className="absolute inset-0 h-full w-full object-contain opacity-80" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
             {src && (
               <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <line x1={src.x} y1={src.y} x2={dst.x} y2={dst.y} stroke="hsl(var(--primary))" strokeWidth="0.6" strokeDasharray="2 2" />
+                <defs>
+                  <marker id="arrow" markerWidth="4" markerHeight="4" refX="2.5" refY="2" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L4,2 L0,4 z" fill="hsl(var(--primary))" />
+                  </marker>
+                </defs>
+                <line x1={src.x} y1={src.y} x2={dst.x} y2={dst.y} stroke="hsl(var(--primary))" strokeWidth="0.8" strokeDasharray="1.5 1.5" markerEnd="url(#arrow)" />
               </svg>
             )}
             {src && (
