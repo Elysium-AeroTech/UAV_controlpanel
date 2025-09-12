@@ -19,13 +19,8 @@ import { TopNav } from "@/components/console/TopNav";
 type Role = "Commander" | "Navigator" | "Armer";
 
 const HARD = {
-  email: "commander.prerit@elysium.io",
   password: "Prerit@9807",
   commanderCode: "980752",
-  preritCode: "980752",
-  raghavCode: "13579",
-  navigatorCode: "246810",
-  armerCode: "112233",
 };
 
 export default function Index() {
