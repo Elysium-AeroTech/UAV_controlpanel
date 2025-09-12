@@ -10,8 +10,18 @@ const COMMANDER_CODE = "980752";
 export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: number; altitudeM: number; powerPct: number }) {
   const [unlocked, setUnlocked] = useState(false);
   const [code, setCode] = useState("");
+  const [aborted, setAborted] = useState(false);
+  const [motorsKilled, setMotorsKilled] = useState(false);
+  const [parachuteDeployed, setParachuteDeployed] = useState(false);
   const mach = speedMS / 340.29;
   const kmph = speedMS * 3.6;
+
+  const doEmergencyAbort = () => {
+    if (!confirm("Confirm EMERGENCY ABORT? This will kill motors and deploy parachute.")) return;
+    setAborted(true);
+    setMotorsKilled(true);
+    setParachuteDeployed(true);
+  };
 
   return (
     <Card>
@@ -42,19 +52,25 @@ export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: 
               </div>
 
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                <Button variant="outline" className="justify-start"><Crosshair className="h-4 w-4 mr-2" /> Lock Target</Button>
-                <Button variant="outline" className="justify-start"><Radar className="h-4 w-4 mr-2" /> Track</Button>
-                <Button variant="outline" className="justify-start"><Scan className="h-4 w-4 mr-2" /> Calibrate</Button>
-                <Button variant="outline" className="justify-start"><Move className="h-4 w-4 mr-2" /> Stabilize</Button>
-                <Button variant="outline" className="justify-start"><SunMoon className="h-4 w-4 mr-2" /> Night</Button>
-                <Button variant="outline" className="justify-start"><Eye className="h-4 w-4 mr-2" /> Zoom +</Button>
-                <Button variant="outline" className="justify-start"><EyeOff className="h-4 w-4 mr-2" /> Zoom -</Button>
-                <Button variant="outline" className="justify-start"><Target className="h-4 w-4 mr-2" /> Waypoint</Button>
-                <Button variant="outline" className="justify-start"><Compass className="h-4 w-4 mr-2" /> Hold</Button>
-                <Button variant="outline" className="justify-start"><Satellite className="h-4 w-4 mr-2" /> Link</Button>
-                <Button variant="outline" className="justify-start"><Shield className="h-4 w-4 mr-2" /> Safe Mode</Button>
-                <Button variant="destructive" className="justify-start"><AlertTriangle className="h-4 w-4 mr-2" /> Emergency</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Crosshair className="h-4 w-4 mr-2" /> Lock Target</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Radar className="h-4 w-4 mr-2" /> Track</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Scan className="h-4 w-4 mr-2" /> Calibrate</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Move className="h-4 w-4 mr-2" /> Stabilize</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><SunMoon className="h-4 w-4 mr-2" /> Night</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Eye className="h-4 w-4 mr-2" /> Zoom +</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><EyeOff className="h-4 w-4 mr-2" /> Zoom -</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Target className="h-4 w-4 mr-2" /> Waypoint</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Compass className="h-4 w-4 mr-2" /> Hold</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Satellite className="h-4 w-4 mr-2" /> Link</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Shield className="h-4 w-4 mr-2" /> Safe Mode</Button>
+                <Button variant="destructive" className="justify-start" onClick={doEmergencyAbort}><AlertTriangle className="h-4 w-4 mr-2" /> Emergency</Button>
               </div>
+              {aborted && (
+                <div className="rounded border border-red-500/50 bg-red-500/10 p-3 text-sm">
+                  <div className="font-semibold text-red-400">EMERGENCY ABORT EXECUTED</div>
+                  <div className="mt-1 text-red-300">Motors: {motorsKilled ? "KILLED" : "ACTIVE"} • Parachute: {parachuteDeployed ? "DEPLOYED" : "STOWED"}</div>
+                </div>
+              )}
             </div>
 
             {/* Right: HUD */}
@@ -63,8 +79,8 @@ export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: 
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="p-3 rounded border bg-background">
                   <div className="text-muted-foreground">Speed</div>
-                  <div className="font-mono text-lg">{kmph.toFixed(0)} km/h</div>
-                  <div className="font-mono text-xs">Mach {mach.toFixed(2)}</div>
+                  <div className="font-mono text-lg">{aborted ? 0 : kmph.toFixed(0)} km/h</div>
+                  <div className="font-mono text-xs">Mach {aborted ? 0 : mach.toFixed(2)}</div>
                 </div>
                 <div className="p-3 rounded border bg-background">
                   <div className="text-muted-foreground">Altitude</div>
@@ -72,17 +88,17 @@ export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: 
                 </div>
                 <div className="p-3 rounded border bg-background">
                   <div className="text-muted-foreground">Power</div>
-                  <div className="font-mono text-lg">{powerPct}%</div>
+                  <div className="font-mono text-lg">{aborted ? 0 : powerPct}%</div>
                 </div>
                 <div className="p-3 rounded border bg-background">
                   <div className="text-muted-foreground">Systems</div>
-                  <div className="font-mono text-lg text-emerald-400">Nominal</div>
+                  <div className={`font-mono text-lg ${aborted ? "text-red-400" : "text-emerald-400"}`}>{aborted ? "ABORTED" : "Nominal"}</div>
                 </div>
               </div>
               <Separator className="my-3" />
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" className="justify-start"><Zap className="h-4 w-4 mr-2" /> Boost</Button>
-                <Button variant="outline" className="justify-start"><Move className="h-4 w-4 mr-2" /> Auto-level</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Zap className="h-4 w-4 mr-2" /> Boost</Button>
+                <Button variant="outline" className="justify-start" disabled={aborted}><Move className="h-4 w-4 mr-2" /> Auto-level</Button>
               </div>
             </div>
           </div>
