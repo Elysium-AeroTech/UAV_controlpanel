@@ -109,8 +109,16 @@ export function LaunchSequencePanel({
         <CardHeader>
           <CardTitle>Voice Authentication</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
-          <div>Voice authentication is only available in the Commander portal. Use Commander login to verify voice there.</div>
+        <CardContent className="space-y-2">
+          {role === "Commander" ? (
+            <div>
+              <VoiceAuth onVerified={(r) => { if (r.access === "Granted") setVoiceOk(true); else setVoiceOk(false); }} />
+              {voiceOk && <CountdownStarter />}
+              {!voiceOk && <div className="text-xs text-muted-foreground mt-2">Voice authentication required here for Commander-only launch enablement.</div>}
+            </div>
+          ) : (
+            <div className="text-sm text-muted-foreground">Voice authentication is available only in the Commander launch panel.</div>
+          )}
         </CardContent>
       </Card>
     </div>
