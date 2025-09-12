@@ -38,7 +38,7 @@ export default function Index() {
   const [commanderCode, setCommanderCode] = useState("");
   const [prerit, setPrerit] = useState("");
   const [raghav, setRaghav] = useState("");
-  const [requireTwoPerson, setRequireTwoPerson] = useState(true);
+  const [requireTwoPerson, setRequireTwoPerson] = useState(false);
 
   // Navigator & Armer auth
   const [navCode, setNavCode] = useState("");
