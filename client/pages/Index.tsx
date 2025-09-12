@@ -73,6 +73,44 @@ export default function Index() {
   const [safetyVerified, setSafetyVerified] = useState(false);
   const [safetyArmed, setSafetyArmed] = useState(false);
 
+  // cursor background movement and input focus haze
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      document.documentElement.style.setProperty("--mouse-x", `${x}%`);
+      document.documentElement.style.setProperty("--mouse-y", `${y}%`);
+    };
+    const onFocus = (e: FocusEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      if (t.tagName !== "INPUT" && t.tagName !== "TEXTAREA") return;
+      const rect = (t as HTMLElement).getBoundingClientRect();
+      const handle = (ev: MouseEvent) => {
+        const fx = ((ev.clientX - rect.left) / rect.width) * 100;
+        const fy = ((ev.clientY - rect.top) / rect.height) * 100;
+        (t as HTMLElement).style.setProperty("--focus-x", `${fx}%`);
+        (t as HTMLElement).style.setProperty("--focus-y", `${fy}%`);
+      };
+      window.addEventListener("mousedown", handle, { once: true });
+      (t as HTMLElement).classList.add("focus-haze");
+    };
+    const onBlur = (e: FocusEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      if (t.tagName !== "INPUT" && t.tagName !== "TEXTAREA") return;
+      (t as HTMLElement).classList.remove("focus-haze");
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("focusin", onFocus);
+    window.addEventListener("focusout", onBlur);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("focusin", onFocus);
+      window.removeEventListener("focusout", onBlur);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen">
       <TopNav status={systemStatus} role={role} />
