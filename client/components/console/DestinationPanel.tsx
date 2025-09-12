@@ -6,7 +6,6 @@ import { Crosshair, Target, MapPin, Lock } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 const INDIA_BOUNDS = { latMin: 6, latMax: 36, lonMin: 68, lonMax: 98 };
-const NAVIGATOR_CODE = "246810";
 
 function project(lat: number, lon: number) {
   const x = ((lon - INDIA_BOUNDS.lonMin) / (INDIA_BOUNDS.lonMax - INDIA_BOUNDS.lonMin)) * 100;
@@ -47,7 +46,6 @@ export function DestinationPanel({
   const [draftLat, setDraftLat] = useState(lat);
   const [draftLon, setDraftLon] = useState(lon);
   const [distanceKm, setDistanceKm] = useState<number | null>(null);
-  const [navCode, setNavCode] = useState("");
 
   useEffect(() => {
     if (curLat != null && curLon != null) {
@@ -65,7 +63,7 @@ export function DestinationPanel({
     });
   };
 
-  const canLockPath = role === "Navigator" ? navCode === NAVIGATOR_CODE : true;
+  const canLockPath = true; // Lock path allowed; Navigator can preview and lock directly
 
   return (
     <div className="grid lg:grid-cols-2 gap-4">
@@ -90,17 +88,12 @@ export function DestinationPanel({
             </Button>
             <Button variant="outline" onClick={() => { setDraftLat(lat); setDraftLon(lon); }}>Reset</Button>
           </div>
-          {role === "Navigator" && (
+          {role === "Navigator" ? (
             <div className="flex items-end gap-2 max-w-sm">
-              <div className="flex-1">
-                <div className="text-xs text-muted-foreground mb-1">Navigator Code (to lock path)</div>
-                <Input value={navCode} onChange={(e) => setNavCode(e.target.value)} placeholder="Enter code" />
-              </div>
-              <Button variant="secondary" disabled={!canLockPath} onClick={() => { if (canLockPath) onSet(draftLat, draftLon); }}><Lock className="h-4 w-4 mr-2" /> Lock Path</Button>
+              <Button variant="secondary" onClick={() => onSet(draftLat, draftLon)}><Lock className="h-4 w-4 mr-2" /> Lock Path</Button>
             </div>
-          )}
-          {role !== "Navigator" && (
-            <div className="text-xs text-muted-foreground">Commander can lock without navigator code.</div>
+          ) : (
+            <div className="text-xs text-muted-foreground">Commander can lock the path from this panel.</div>
           )}
           <div className="flex gap-2">
             <Button variant="outline" onClick={useGeolocation}><MapPin className="h-4 w-4 mr-2" /> Use Current Location</Button>
