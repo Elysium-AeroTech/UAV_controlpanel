@@ -31,7 +31,7 @@ export function SafetyPanel({
     setVerified(false);
   };
 
-  const canArm = verified && warheadInserted && pinRemoved;
+  const canArm = verified && warheadInserted && pinRemoved && !armed;
 
   return (
     <div className="grid md:grid-cols-2 gap-4">
@@ -52,7 +52,7 @@ export function SafetyPanel({
                 <div className={`h-6 w-6 rounded-full ${warheadInserted ? "bg-red-500" : "bg-neutral-400"}`} />
               </div>
               <div className="flex-1 text-sm text-muted-foreground">Physically secure the warhead into the bay. This step is simulated; toggling will show the change.</div>
-              <Button onClick={() => setWarheadInserted((v) => !v)} variant={warheadInserted ? "destructive" : "outline"}>{warheadInserted ? "Remove Warhead" : "Insert Warhead"}</Button>
+              <Button onClick={() => setWarheadInserted(true)} variant={warheadInserted ? "destructive" : "outline"} disabled={warheadInserted}>Insert Warhead</Button>
             </div>
           </div>
 
@@ -81,8 +81,8 @@ export function SafetyPanel({
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={() => setVerified(input === captcha)} disabled={!captcha} variant={verified ? "secondary" : "default"}>{verified ? "Verified" : "Verify"}</Button>
-            <Button onClick={() => { if (canArm) { setArmed(true); } }} variant={canArm ? "destructive" : "outline"} disabled={!canArm}>{armed ? "Disarm" : "Arm"}</Button>
+            <Button onClick={() => setVerified(input === captcha)} disabled={!captcha || verified} variant={verified ? "secondary" : "default"}>{verified ? "Verified" : "Verify"}</Button>
+            <Button onClick={() => { if (canArm) { setArmed(true); } }} variant={canArm ? "destructive" : "outline"} disabled={!canArm}>{armed ? "ARMED" : "Arm"}</Button>
           </div>
 
           <Separator />
