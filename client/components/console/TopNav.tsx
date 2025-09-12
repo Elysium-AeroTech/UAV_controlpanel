@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Shield, Crosshair, GaugeCircle } from "lucide-react";
 
-export function TopNav({ status }: { status: string }) {
+export function TopNav({ status, role }: { status: string; role?: "Commander" | "Navigator" | "Armer" }) {
   return (
     <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
@@ -14,6 +14,8 @@ export function TopNav({ status }: { status: string }) {
           <Badge variant="secondary" className="ml-2">Missile Ops</Badge>
         </div>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          {role && <div className="hidden md:flex items-center gap-1">Role: {role}</div>}
+          <Separator orientation="vertical" className="h-6" />
           <div className="hidden md:flex items-center gap-1"><GaugeCircle className="h-4 w-4" /> System</div>
           <Separator orientation="vertical" className="h-6" />
           <div className="flex items-center gap-2"><Shield className="h-4 w-4" /> <span className="text-emerald-400">{status}</span></div>
