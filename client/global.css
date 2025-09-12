@@ -107,9 +107,82 @@
     @apply border-border;
   }
 
+  /* Cursor-follow background */
+  :root {
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+  }
+
   body {
     @apply bg-background text-foreground;
-    background-image: radial-gradient(circle at 20% 20%, hsl(var(--primary)/0.06), transparent 25%), radial-gradient(circle at 80% 0%, hsl(var(--primary)/0.08), transparent 30%), radial-gradient(circle at 0% 100%, hsl(var(--primary)/0.05), transparent 25%);
+    background-image:
+      radial-gradient(
+        circle at var(--mouse-x) var(--mouse-y),
+        rgba(16, 185, 129, 0.06),
+        transparent 8%
+      ),
+      radial-gradient(
+        circle at 80% 0%,
+        hsl(var(--primary) / 0.08),
+        transparent 30%
+      ),
+      radial-gradient(
+        circle at 0% 100%,
+        hsl(var(--primary) / 0.05),
+        transparent 25%
+      );
     background-attachment: fixed;
+    transition: background-position 0.08s linear;
+  }
+
+  /* Button hover green haze */
+  button {
+    position: relative;
+    overflow: visible;
+  }
+  button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(16, 185, 129, 0.18),
+      transparent 40%
+    );
+    opacity: 0;
+    transform: scale(0.9);
+    transition:
+      opacity 180ms ease,
+      transform 240ms ease;
+    pointer-events: none;
+  }
+  button:hover::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Input focus haze using box-shadow for better compatibility */
+  input,
+  textarea {
+    transition:
+      box-shadow 280ms ease,
+      background-color 200ms ease;
+  }
+  input:focus,
+  textarea:focus {
+    outline: none;
+    box-shadow:
+      0 6px 24px rgba(16, 185, 129, 0.12),
+      0 0 0 6px rgba(16, 185, 129, 0.06) inset;
+    background-color: rgba(16, 185, 129, 0.02);
+  }
+  /* small hint when programmatically applied */
+  input.focus-haze,
+  textarea.focus-haze {
+    box-shadow:
+      0 6px 24px rgba(16, 185, 129, 0.12),
+      0 0 0 6px rgba(16, 185, 129, 0.06) inset;
   }
 }
