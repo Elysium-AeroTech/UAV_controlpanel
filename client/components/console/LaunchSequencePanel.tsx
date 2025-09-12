@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, XCircle, Rocket, Siren, ShieldAlert } from "lucide-react";
 import { VoiceAuth } from "@/components/console/VoiceAuth";
 import { useEffect } from "react";
+import { CountdownStarter } from "@/components/console/CountdownStarter";
 
 function Row({ label, ok }: { label: string; ok: boolean }) {
   return (
