@@ -32,8 +32,7 @@ export default function Index() {
   // Global role
   const [role, setRole] = useState<Role>("Commander");
 
-  // Commander auth
-  const [email, setEmail] = useState("");
+  // Commander auth: only password + commander code
   const [password, setPassword] = useState("");
   const [commanderCode, setCommanderCode] = useState("");
   const [prerit, setPrerit] = useState("");
@@ -44,15 +43,26 @@ export default function Index() {
   const [navCode, setNavCode] = useState("");
   const [armCode, setArmCode] = useState("");
 
-  const emailOk = email === HARD.email && password === HARD.password;
+  const passwordOk = password === HARD.password;
   const commanderOk = commanderCode === HARD.commanderCode;
   const twoOk = prerit === HARD.preritCode && raghav === HARD.raghavCode;
 
-  const commanderAuthed = emailOk && commanderOk && (requireTwoPerson ? twoOk : true);
+  const commanderAuthed = passwordOk && commanderOk && (requireTwoPerson ? twoOk : true);
   const navigatorAuthed = navCode === HARD.navigatorCode;
   const armerAuthed = armCode === HARD.armerCode || armCode === HARD.commanderCode;
 
   const isAuthed = role === "Commander" ? commanderAuthed : role === "Navigator" ? navigatorAuthed : armerAuthed;
+
+  // logout helper
+  const logout = () => {
+    setPassword("");
+    setCommanderCode("");
+    setNavCode("");
+    setArmCode("");
+    setPrerit("");
+    setRaghav("");
+    setRole("Commander");
+  };
 
   // Telemetry state (live or test-injected)
   const [rpm, setRpm] = useState(6200);
