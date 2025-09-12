@@ -191,8 +191,6 @@ export default function Index() {
                 </TabsList>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
                   <span>Role: {role}</span>
-                  <span>•</span>
-                  {role === "Commander" && <span>Consent: {requireTwoPerson ? (twoOk ? "Active" : "Required") : "Disabled"}</span>}
                 </div>
               </div>
 
