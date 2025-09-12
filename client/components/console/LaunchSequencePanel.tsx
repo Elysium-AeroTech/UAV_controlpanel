@@ -107,8 +107,8 @@ export function LaunchSequencePanel({
         <CardHeader>
           <CardTitle>Voice Authentication</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <VoiceAuth onVerified={(r) => setVoiceOk(r.access === "Granted")} />
+        <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <div>Voice authentication is only available in the Commander portal. Use Commander login to verify voice there.</div>
         </CardContent>
       </Card>
     </div>
