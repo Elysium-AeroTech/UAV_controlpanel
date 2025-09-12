@@ -149,7 +149,7 @@ export default function Index() {
                     </div>
                     <div className="mt-3">
                       <div className="text-xs text-muted-foreground">Voice Authentication (Commander only)</div>
-                      <div className="mt-2">/* Voice auth widget available in commander portal only */</div>
+                      <div className="mt-2"><VoiceAuth onVerified={(r) => { /* optional: use result */ }} /></div>
                     </div>
                   </div>
                 </div>
