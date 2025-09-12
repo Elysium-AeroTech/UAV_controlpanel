@@ -88,52 +88,56 @@ export default function Index() {
                 <Button variant={role === "Navigator" ? "secondary" : "outline"} onClick={() => setRole("Navigator")}>Navigator</Button>
                 <Button variant={role === "Armer" ? "secondary" : "outline"} onClick={() => setRole("Armer")}>Armer</Button>
               </div>
+
               {role === "Commander" && (
-                <div className="grid md:grid-cols-3 gap-3">
+                <div className="grid md:grid-cols-2 gap-3 items-end">
                   <div className="space-y-2">
                     <Label>Email</Label>
                     <Input placeholder="commander@domain" value={email} onChange={(e) => setEmail(e.target.value)} />
                     <Label>Password</Label>
                     <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <div className="text-xs text-muted-foreground">Login as Commander</div>
+                    <div className="text-xs text-muted-foreground">Commander needs both password and code.</div>
                     <Badge variant={emailOk ? "secondary" : "outline"} className="mt-1"><User className="h-3 w-3 mr-1" /> {emailOk ? "Validated" : "Pending"}</Badge>
                   </div>
+
                   <div className="space-y-2">
                     <Label>Commander's Code</Label>
                     <Input placeholder="Enter code" value={commanderCode} onChange={(e) => setCommanderCode(e.target.value)} />
                     <div className="text-xs text-muted-foreground">Second step</div>
-                    <Badge variant={commanderOk ? "secondary" : "outline"} className="mt-6"><KeyRound className="h-3 w-3 mr-1" /> {commanderOk ? "Verified" : "Required"}</Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Two-Person Consent</Label>
-                      <Badge variant={requireTwoPerson ? "secondary" : "outline"}>{requireTwoPerson ? "ON" : "OFF"}</Badge>
+                    <Badge variant={commanderOk ? "secondary" : "outline"} className="mt-2"><KeyRound className="h-3 w-3 mr-1" /> {commanderOk ? "Verified" : "Required"}</Badge>
+                    <div className="mt-3">
+                      <Button disabled={!isAuthed}>Enter Command</Button>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Input placeholder="Prerit's Code" value={prerit} onChange={(e) => setPrerit(e.target.value)} disabled={!requireTwoPerson} />
-                      <Input placeholder="Raghav's Code" value={raghav} onChange={(e) => setRaghav(e.target.value)} disabled={!requireTwoPerson} />
-                    </div>
-                    <div className="text-xs text-muted-foreground">Both must authenticate</div>
-                    <Badge variant={requireTwoPerson ? (twoOk ? "secondary" : "outline") : "secondary"} className="mt-1"><Users className="h-3 w-3 mr-1" /> {requireTwoPerson ? (twoOk ? "Consent Granted" : "Awaiting Codes") : "Bypassed (Test)"}</Badge>
                   </div>
                 </div>
               )}
+
               {role === "Navigator" && (
-                <div className="space-y-2 max-w-md">
-                  <Label>Navigator Code</Label>
-                  <Input placeholder="Enter navigator code" value={navCode} onChange={(e) => setNavCode(e.target.value)} />
+                <div className="flex items-end gap-3">
+                  <div className="flex-1">
+                    <Label>Navigator Code</Label>
+                    <Input placeholder="Enter navigator code" value={navCode} onChange={(e) => setNavCode(e.target.value)} />
+                  </div>
+                  <div>
+                    <Button disabled={!navigatorAuthed}>Enter Command</Button>
+                  </div>
                 </div>
               )}
+
               {role === "Armer" && (
-                <div className="space-y-2 max-w-md">
-                  <Label>Armer Code</Label>
-                  <Input placeholder="Enter armer code or commander code" value={armCode} onChange={(e) => setArmCode(e.target.value)} />
+                <div className="flex items-end gap-3">
+                  <div className="flex-1">
+                    <Label>Armer Code</Label>
+                    <Input placeholder="Enter armer code or commander code" value={armCode} onChange={(e) => setArmCode(e.target.value)} />
+                  </div>
+                  <div>
+                    <Button disabled={!armerAuthed}>Enter Command</Button>
+                  </div>
                 </div>
               )}
+
               <Separator />
-              <div className="flex justify-end">
-                <Button disabled={!isAuthed}>Enter Command</Button>
-              </div>
+              <div className="text-xs text-muted-foreground">Select role, provide credentials and click Enter Command.</div>
             </CardContent>
           </Card>
         ) : (
