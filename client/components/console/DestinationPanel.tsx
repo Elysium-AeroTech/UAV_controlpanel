@@ -121,7 +121,7 @@ export function DestinationPanel({
         <CardContent>
           <div className="relative h-72 w-full rounded border border-primary/40 bg-black/60 overflow-hidden">
             <div className="absolute inset-0 pointer-events-none opacity-50" style={{ backgroundImage: "linear-gradient(rgba(0,255,120,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,120,0.06) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/India_outline.svg" alt="India Map" className="absolute inset-0 h-full w-full object-contain opacity-80" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/India_outline.svg" alt="India Map" className="absolute inset-0 h-full w-full object-contain opacity-90" onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.svg"; (e.currentTarget as HTMLImageElement).style.opacity = "1"; }} />
             {src && (
               <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <defs>
