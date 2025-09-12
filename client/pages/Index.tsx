@@ -48,10 +48,6 @@ export default function Index() {
   const logout = () => {
     setPassword("");
     setCommanderCode("");
-    setNavCode("");
-    setArmCode("");
-    setPrerit("");
-    setRaghav("");
     setRole("Commander");
   };
 
