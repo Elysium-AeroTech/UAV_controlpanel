@@ -124,7 +124,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
-      <TopNav status={systemStatus} role={role} />
+      <TopNav status={systemStatus} role={role} onLogout={logout} />
       <main className="container mx-auto px-4 py-6">
         {!isAuthed ? (
           <Card className="max-w-3xl mx-auto">
