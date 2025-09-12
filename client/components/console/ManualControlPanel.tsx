@@ -10,6 +10,7 @@ const COMMANDER_CODE = "980752";
 export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: number; altitudeM: number; powerPct: number }) {
   const [unlocked, setUnlocked] = useState(false);
   const [code, setCode] = useState("");
+  const [confirmUnlock, setConfirmUnlock] = useState(false);
   const [aborted, setAborted] = useState(false);
   const [motorsKilled, setMotorsKilled] = useState(false);
   const [parachuteDeployed, setParachuteDeployed] = useState(false);
@@ -21,6 +22,22 @@ export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: 
     setAborted(true);
     setMotorsKilled(true);
     setParachuteDeployed(true);
+  };
+
+  const tryUnlock = () => {
+    if (unlocked) return;
+    if (!confirmUnlock) {
+      // first click
+      setConfirmUnlock(true);
+      setTimeout(() => setConfirmUnlock(false), 3500);
+      return;
+    }
+    if (code === COMMANDER_CODE) {
+      setUnlocked(true);
+    } else {
+      alert("Invalid commander code.");
+      setConfirmUnlock(false);
+    }
   };
 
   return (
