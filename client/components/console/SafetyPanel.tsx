@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ShieldCheck, Rocket, Lock } from "lucide-react";
+import { VoiceAuth } from "@/components/console/VoiceAuth";
 
 export function SafetyPanel({
   verified,
@@ -21,7 +22,6 @@ export function SafetyPanel({
   const [input, setInput] = useState("");
 
   const regenerated = useMemo(() => {
-    // change string each render request when refresh button is clicked
     return captcha;
   }, [captcha]);
 
@@ -41,6 +41,10 @@ export function SafetyPanel({
           <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Safety & Arming</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className={`h-3 w-3 rounded-full ${armed ? "bg-red-500" : "bg-neutral-500"}`} />
+            <div className={`text-sm ${armed ? "text-red-400" : "text-muted-foreground"}`}>{armed ? "ARMED" : "SAFE"}</div>
+          </div>
           <div>
             <div className="text-xs text-muted-foreground mb-1">Captcha</div>
             <div className="flex items-center gap-3">
@@ -61,6 +65,11 @@ export function SafetyPanel({
             <Button onClick={() => setArmed((v) => !v)} variant={armed ? "secondary" : "outline"} disabled={!verified}>
               {armed ? "Disarm" : "Arm"}
             </Button>
+          </div>
+          <Separator />
+          <div>
+            <div className="text-sm mb-2">Voice Authentication</div>
+            <VoiceAuth />
           </div>
           <Separator />
           <Alert>
