@@ -141,12 +141,10 @@ export default function Index() {
               {role === "Commander" && (
                 <div className="grid md:grid-cols-2 gap-3 items-end">
                   <div className="space-y-2">
-                    <Label>Email</Label>
-                    <Input placeholder="commander@domain" value={email} onChange={(e) => setEmail(e.target.value)} />
                     <Label>Password</Label>
                     <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <div className="text-xs text-muted-foreground">Commander needs both password and code.</div>
-                    <Badge variant={emailOk ? "secondary" : "outline"} className="mt-1"><User className="h-3 w-3 mr-1" /> {emailOk ? "Validated" : "Pending"}</Badge>
+                    <div className="text-xs text-muted-foreground">Commander needs password + commander code.</div>
+                    <Badge variant={passwordOk ? "secondary" : "outline"} className="mt-1"><User className="h-3 w-3 mr-1" /> {passwordOk ? "Password OK" : "Pending"}</Badge>
                   </div>
 
                   <div className="space-y-2">
@@ -155,12 +153,31 @@ export default function Index() {
                     <div className="text-xs text-muted-foreground">Second step</div>
                     <Badge variant={commanderOk ? "secondary" : "outline"} className="mt-2"><KeyRound className="h-3 w-3 mr-1" /> {commanderOk ? "Verified" : "Required"}</Badge>
                     <div className="mt-3">
-                      <Button disabled={!isAuthed}>Enter Command</Button>
+                      <Button disabled={!commanderAuthed}>Enter Command</Button>
                     </div>
-                    <div className="mt-3">
-                      <div className="text-xs text-muted-foreground">Voice Authentication (Commander only)</div>
-                      <div className="mt-2"><VoiceAuth onVerified={(r) => { /* optional: use result */ }} /></div>
+                  </div>
+
+                  <div className="md:col-span-2 grid grid-cols-2 gap-2 mt-2">
+                    <div>
+                      <Label>Navigator Code (view/update)</Label>
+                      <Input value={navCode} onChange={(e) => setNavCode(e.target.value)} placeholder="Navigator code" />
                     </div>
+                    <div>
+                      <Label>Armer Code (view/update)</Label>
+                      <Input value={armCode} onChange={(e) => setArmCode(e.target.value)} placeholder="Armer code" />
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <div className="flex items-center justify-between">
+                      <Label>Two-Person Consent</Label>
+                      <Badge variant={requireTwoPerson ? "secondary" : "outline"}>{requireTwoPerson ? "ON" : "OFF"}</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <Input placeholder="Prerit's Code" value={prerit} onChange={(e) => setPrerit(e.target.value)} disabled={!requireTwoPerson} />
+                      <Input placeholder="Raghav's Code" value={raghav} onChange={(e) => setRaghav(e.target.value)} disabled={!requireTwoPerson} />
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">Both must authenticate when two-person consent is enabled</div>
                   </div>
                 </div>
               )}
@@ -198,7 +215,7 @@ export default function Index() {
             <Tabs defaultValue={role === "Commander" ? "dashboard" : role === "Navigator" ? "destination" : "safety"}>
               <div className="flex items-center justify-between">
                 <TabsList>
-                  {role === "Commander" && <TabsTrigger value="dashboard">Dashboard</TabsTrigger>}
+                  <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
                   <TabsTrigger value="safety">Safety & Arming</TabsTrigger>
                   <TabsTrigger value="destination">Destination</TabsTrigger>
                   {role === "Commander" && <TabsTrigger value="manual">Manual Control</TabsTrigger>}
@@ -211,30 +228,28 @@ export default function Index() {
                 </div>
               </div>
 
-              {role === "Commander" && (
-                <TabsContent value="dashboard" className="mt-4 space-y-4">
-                  <TelemetryPanel rpm={rpm} batteryPct={battery} speed={speed} motorTemp={motorTemp} health={health} />
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Status</CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
-                      <div className="p-3 rounded border bg-secondary/30">
-                        <div className="text-muted-foreground">Login</div>
-                        <div className="font-mono">{emailOk ? "OK" : "FAIL"}</div>
-                      </div>
-                      <div className="p-3 rounded border bg-secondary/30">
-                        <div className="text-muted-foreground">Commander Code</div>
-                        <div className="font-mono">{commanderOk ? "OK" : "FAIL"}</div>
-                      </div>
-                      <div className="p-3 rounded border bg-secondary/30">
-                        <div className="text-muted-foreground">Two-Person</div>
-                        <div className="font-mono">{requireTwoPerson ? (twoOk ? "OK" : "WAIT") : "OFF"}</div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              )}
+              <TabsContent value="dashboard" className="mt-4 space-y-4">
+                <TelemetryPanel rpm={rpm} batteryPct={battery} speed={speed} motorTemp={motorTemp} health={health} />
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Status</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
+                    <div className="p-3 rounded border bg-secondary/30">
+                      <div className="text-muted-foreground">Auth</div>
+                      <div className="font-mono">{isAuthed ? "OK" : "LOCKED"}</div>
+                    </div>
+                    <div className="p-3 rounded border bg-secondary/30">
+                      <div className="text-muted-foreground">Commander Code</div>
+                      <div className="font-mono">{commanderOk ? "OK" : "FAIL"}</div>
+                    </div>
+                    <div className="p-3 rounded border bg-secondary/30">
+                      <div className="text-muted-foreground">Two-Person</div>
+                      <div className="font-mono">{requireTwoPerson ? (twoOk ? "OK" : "WAIT") : "OFF"}</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
               <TabsContent value="safety" className="mt-4">
                 <SafetyPanel
@@ -258,7 +273,7 @@ export default function Index() {
               {(role === "Commander" || role === "Navigator") && (
                 <TabsContent value="launch" className="mt-4">
                   <LaunchSequencePanel
-                    emailOk={emailOk}
+                    emailOk={commanderAuthed}
                     commanderOk={commanderOk}
                     consentOk={role === "Commander" ? (requireTwoPerson ? twoOk : true) : true}
                     safetyVerified={safetyVerified}
