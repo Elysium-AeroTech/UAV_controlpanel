@@ -16,7 +16,15 @@ export function CountdownStarter() {
   return (
     <div className="mt-3">
       {!running ? (
-        <Button onClick={() => { setRunning(true); setCount(10); }} variant="destructive">Start Countdown (10s)</Button>
+        <Button
+          onClick={() => {
+            setRunning(true);
+            setCount(10);
+          }}
+          variant="destructive"
+        >
+          Start Countdown (10s)
+        </Button>
       ) : (
         <div className="p-3 rounded border bg-secondary/10 text-center">
           <div className="text-sm text-muted-foreground">Countdown</div>

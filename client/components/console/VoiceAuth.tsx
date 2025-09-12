@@ -12,7 +12,11 @@ interface AuthResponse {
   message?: string;
 }
 
-export function VoiceAuth({ onVerified }: { onVerified?: (r: AuthResponse) => void }) {
+export function VoiceAuth({
+  onVerified,
+}: {
+  onVerified?: (r: AuthResponse) => void;
+}) {
   const [recording, setRecording] = useState(false);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -75,8 +79,14 @@ export function VoiceAuth({ onVerified }: { onVerified?: (r: AuthResponse) => vo
         return;
       }
       const parsed: AuthResponse = {
-        similarity: typeof json.similarity === "number" ? json.similarity : undefined,
-        access: json.result === "Access Granted" ? "Granted" : json.result === "Access Denied" ? "Denied" : undefined,
+        similarity:
+          typeof json.similarity === "number" ? json.similarity : undefined,
+        access:
+          json.result === "Access Granted"
+            ? "Granted"
+            : json.result === "Access Denied"
+              ? "Denied"
+              : undefined,
         message: json.message || json.result || undefined,
       };
       setLastResult(parsed);
@@ -101,17 +111,29 @@ export function VoiceAuth({ onVerified }: { onVerified?: (r: AuthResponse) => vo
             <Square className="h-4 w-4 mr-2" /> Stop
           </Button>
         )}
-        <div className="text-xs text-muted-foreground">Use your microphone to authenticate</div>
+        <div className="text-xs text-muted-foreground">
+          Use your microphone to authenticate
+        </div>
       </div>
       <div>
         <Label htmlFor="voicefile">Or Upload Audio</Label>
         <div className="flex gap-2 items-center mt-1">
-          <Input id="voicefile" type="file" accept="audio/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadFile(f); }} />
+          <Input
+            id="voicefile"
+            type="file"
+            accept="audio/*"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void uploadFile(f);
+            }}
+          />
           <Upload className="h-4 w-4 text-muted-foreground" />
         </div>
       </div>
       <Separator />
-      {loading && <div className="text-xs text-muted-foreground">Authenticating...</div>}
+      {loading && (
+        <div className="text-xs text-muted-foreground">Authenticating...</div>
+      )}
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
@@ -119,8 +141,26 @@ export function VoiceAuth({ onVerified }: { onVerified?: (r: AuthResponse) => vo
       )}
       {lastResult && (
         <div className="text-sm">
-          <div>Similarity: <span className="font-mono">{typeof lastResult.similarity === "number" ? `${(lastResult.similarity * 100).toFixed(1)}%` : "N/A"}</span></div>
-          <div>Access: <span className={lastResult.access === "Granted" ? "text-emerald-400" : "text-red-400"}>{lastResult.access || "Unknown"}</span></div>
+          <div>
+            Similarity:{" "}
+            <span className="font-mono">
+              {typeof lastResult.similarity === "number"
+                ? `${(lastResult.similarity * 100).toFixed(1)}%`
+                : "N/A"}
+            </span>
+          </div>
+          <div>
+            Access:{" "}
+            <span
+              className={
+                lastResult.access === "Granted"
+                  ? "text-emerald-400"
+                  : "text-red-400"
+              }
+            >
+              {lastResult.access || "Unknown"}
+            </span>
+          </div>
         </div>
       )}
     </div>

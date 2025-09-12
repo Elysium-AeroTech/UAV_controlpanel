@@ -66,27 +66,49 @@ export function TestConsole({
         <Separator />
         <div>
           <Label>Inject RPM</Label>
-          <Input type="number" value={rpm} onChange={(e) => setRpm(Number(e.target.value))} />
+          <Input
+            type="number"
+            value={rpm}
+            onChange={(e) => setRpm(Number(e.target.value))}
+          />
         </div>
         <div>
           <Label>Inject Battery %</Label>
-          <Input type="number" value={battery} onChange={(e) => setBattery(Number(e.target.value))} />
+          <Input
+            type="number"
+            value={battery}
+            onChange={(e) => setBattery(Number(e.target.value))}
+          />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div>
             <Label>Speed (m/s)</Label>
-            <Input type="number" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} />
+            <Input
+              type="number"
+              value={speed}
+              onChange={(e) => setSpeed(Number(e.target.value))}
+            />
           </div>
           <div>
             <Label>Motor Temp (°C)</Label>
-            <Input type="number" value={motorTemp} onChange={(e) => setMotorTemp(Number(e.target.value))} />
+            <Input
+              type="number"
+              value={motorTemp}
+              onChange={(e) => setMotorTemp(Number(e.target.value))}
+            />
           </div>
         </div>
         <div>
           <Label>Altitude (m)</Label>
-          <Input type="number" value={altitude} onChange={(e) => setAltitude(Number(e.target.value))} />
+          <Input
+            type="number"
+            value={altitude}
+            onChange={(e) => setAltitude(Number(e.target.value))}
+          />
         </div>
-        <div className="text-xs text-muted-foreground">Small popup for quick testing. Close with the X.</div>
+        <div className="text-xs text-muted-foreground">
+          Small popup for quick testing. Close with the X.
+        </div>
       </div>
     </div>
   );
