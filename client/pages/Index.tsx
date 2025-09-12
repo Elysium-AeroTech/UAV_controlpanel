@@ -35,23 +35,14 @@ export default function Index() {
   // Commander auth: only password + commander code
   const [password, setPassword] = useState("");
   const [commanderCode, setCommanderCode] = useState("");
-  const [prerit, setPrerit] = useState("");
-  const [raghav, setRaghav] = useState("");
-  const [requireTwoPerson, setRequireTwoPerson] = useState(false);
-
-  // Navigator & Armer auth
-  const [navCode, setNavCode] = useState("");
-  const [armCode, setArmCode] = useState("");
 
   const passwordOk = password === HARD.password;
   const commanderOk = commanderCode === HARD.commanderCode;
-  const twoOk = prerit === HARD.preritCode && raghav === HARD.raghavCode;
 
-  const commanderAuthed = passwordOk && commanderOk && (requireTwoPerson ? twoOk : true);
-  const navigatorAuthed = navCode === HARD.navigatorCode;
-  const armerAuthed = armCode === HARD.armerCode || armCode === HARD.commanderCode;
+  const commanderAuthed = passwordOk && commanderOk;
 
-  const isAuthed = role === "Commander" ? commanderAuthed : role === "Navigator" ? navigatorAuthed : armerAuthed;
+  // For demo: allow dashboard access to all roles; sensitive actions require commanderAuthed
+  const isAuthed = true;
 
   // logout helper
   const logout = () => {
@@ -157,39 +148,17 @@ export default function Index() {
                     </div>
                   </div>
 
-                  <div className="md:col-span-2 grid grid-cols-2 gap-2 mt-2">
-                    <div>
-                      <Label>Navigator Code (view/update)</Label>
-                      <Input value={navCode} onChange={(e) => setNavCode(e.target.value)} placeholder="Navigator code" />
-                    </div>
-                    <div>
-                      <Label>Armer Code (view/update)</Label>
-                      <Input value={armCode} onChange={(e) => setArmCode(e.target.value)} placeholder="Armer code" />
-                    </div>
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Two-Person Consent</Label>
-                      <Badge variant={requireTwoPerson ? "secondary" : "outline"}>{requireTwoPerson ? "ON" : "OFF"}</Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
-                      <Input placeholder="Prerit's Code" value={prerit} onChange={(e) => setPrerit(e.target.value)} disabled={!requireTwoPerson} />
-                      <Input placeholder="Raghav's Code" value={raghav} onChange={(e) => setRaghav(e.target.value)} disabled={!requireTwoPerson} />
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">Both must authenticate when two-person consent is enabled</div>
-                  </div>
+                  {/* Navigator and Armer codes removed — only Commander auth is required */}
                 </div>
               )}
 
               {role === "Navigator" && (
                 <div className="flex items-end gap-3">
                   <div className="flex-1">
-                    <Label>Navigator Code</Label>
-                    <Input placeholder="Enter navigator code" value={navCode} onChange={(e) => setNavCode(e.target.value)} />
+                    <div className="text-sm">Navigator panel — use dashboard tools. Sensitive actions require Commander authentication.</div>
                   </div>
                   <div>
-                    <Button disabled={!navigatorAuthed}>Enter Command</Button>
+                    <Button disabled={!commanderAuthed}>Enter Command</Button>
                   </div>
                 </div>
               )}
@@ -197,11 +166,10 @@ export default function Index() {
               {role === "Armer" && (
                 <div className="flex items-end gap-3">
                   <div className="flex-1">
-                    <Label>Armer Code</Label>
-                    <Input placeholder="Enter armer code or commander code" value={armCode} onChange={(e) => setArmCode(e.target.value)} />
+                    <div className="text-sm">Armer panel — use dashboard tools. Sensitive actions require Commander authentication.</div>
                   </div>
                   <div>
-                    <Button disabled={!armerAuthed}>Enter Command</Button>
+                    <Button disabled={!commanderAuthed}>Enter Command</Button>
                   </div>
                 </div>
               )}
@@ -236,8 +204,8 @@ export default function Index() {
                   </CardHeader>
                   <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
                     <div className="p-3 rounded border bg-secondary/30">
-                      <div className="text-muted-foreground">Auth</div>
-                      <div className="font-mono">{isAuthed ? "OK" : "LOCKED"}</div>
+                      <div className="text-muted-foreground">Commander Auth</div>
+                      <div className="font-mono">{commanderAuthed ? "OK" : "LOCKED"}</div>
                     </div>
                     <div className="p-3 rounded border bg-secondary/30">
                       <div className="text-muted-foreground">Commander Code</div>
@@ -245,7 +213,7 @@ export default function Index() {
                     </div>
                     <div className="p-3 rounded border bg-secondary/30">
                       <div className="text-muted-foreground">Two-Person</div>
-                      <div className="font-mono">{requireTwoPerson ? (twoOk ? "OK" : "WAIT") : "OFF"}</div>
+                      <div className="font-mono">OFF</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -275,7 +243,7 @@ export default function Index() {
                   <LaunchSequencePanel
                     emailOk={commanderAuthed}
                     commanderOk={commanderOk}
-                    consentOk={role === "Commander" ? (requireTwoPerson ? twoOk : true) : true}
+                    consentOk={true}
                     safetyVerified={safetyVerified}
                     safetyArmed={safetyArmed}
                     distanceKm={curLat != null && curLon != null ? (function(){
@@ -302,8 +270,6 @@ export default function Index() {
         setSpeed={setSpeed}
         setMotorTemp={setMotorTemp}
         setAltitude={setAltitude}
-        requireTwoPerson={requireTwoPerson}
-        setRequireTwoPerson={setRequireTwoPerson}
       />
     </div>
   );
