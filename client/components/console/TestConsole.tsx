@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { TestTube2 } from "lucide-react";
 import { useState } from "react";
+import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 export function TestConsole({
   rpm,
