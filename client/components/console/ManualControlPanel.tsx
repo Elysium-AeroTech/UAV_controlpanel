@@ -41,16 +41,6 @@ export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: 
           <div className="grid lg:grid-cols-3 gap-4">
             {/* Left: camera + control grid */}
             <div className="lg:col-span-2 space-y-4">
-              <div className="relative h-72 w-full rounded border border-primary/40 bg-black/60 overflow-hidden">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/No_video_image.svg" alt="UAV Not linked" className="absolute inset-0 h-full w-full object-cover opacity-20" />
-                <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,255,120,0.08)_4px)]" />
-                <div className="absolute inset-0 grid place-items-center">
-                  <div className="rounded-full h-28 w-28 border-2 border-primary/60" />
-                  <div className="absolute h-0.5 w-24 bg-primary/60" />
-                </div>
-                <div className="absolute bottom-2 left-2 text-xs text-muted-foreground">UAV Not linked</div>
-              </div>
-
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                 <Button variant="outline" className="justify-start"><Crosshair className="h-4 w-4 mr-2" /> Lock Target</Button>
                 <Button variant="outline" className="justify-start"><Radar className="h-4 w-4 mr-2" /> Track</Button>
@@ -93,6 +83,12 @@ export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: 
               <div className="grid grid-cols-2 gap-2">
                 <Button variant="outline" className="justify-start"><Zap className="h-4 w-4 mr-2" /> Boost</Button>
                 <Button variant="outline" className="justify-start"><Move className="h-4 w-4 mr-2" /> Auto-level</Button>
+              </div>
+              <Separator className="my-3" />
+              <div className="grid grid-cols-3 gap-3 text-sm">
+                <div className="p-3 rounded border bg-background"><div className="text-muted-foreground">Heading</div><div className="font-mono text-lg">045°</div></div>
+                <div className="p-3 rounded border bg-background"><div className="text-muted-foreground">Pitch</div><div className="font-mono text-lg">+02°</div></div>
+                <div className="p-3 rounded border bg-background"><div className="text-muted-foreground">Roll</div><div className="font-mono text-lg">-01°</div></div>
               </div>
             </div>
           </div>
