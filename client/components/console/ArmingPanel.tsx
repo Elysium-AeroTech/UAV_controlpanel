@@ -48,37 +48,42 @@ export function ArmingPanel({ armed, setArmed }: { armed: boolean; setArmed: (b:
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div>Run Systems Check</div>
-              <Button size="sm" variant="outline" onClick={() => run("systems")}><Play className="h-4 w-4 mr-1" /> Run</Button>
+              <Button size="sm" variant="outline" onClick={() => run("systems")}><Play className="h-4 w-4 mr-1" /> {runs.systems === 0 ? "Run" : "Re-Run"}</Button>
             </div>
             <Progress value={runs.systems} />
+            {runs.systems === 100 ? <div className="text-xs text-emerald-400">System Ready</div> : null}
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div>Calibrate Sensors</div>
-              <Button size="sm" variant="outline" onClick={() => run("calibrate")}><Play className="h-4 w-4 mr-1" /> Run</Button>
+              <Button size="sm" variant="outline" onClick={() => run("calibrate")}><Play className="h-4 w-4 mr-1" /> {runs.calibrate === 0 ? "Run" : "Re-Run"}</Button>
             </div>
             <Progress value={runs.calibrate} />
+            {runs.calibrate === 100 ? <div className="text-xs text-emerald-400">System Ready</div> : null}
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div>Load Mission Profile</div>
-              <Button size="sm" variant="outline" onClick={() => run("mission")}><Play className="h-4 w-4 mr-1" /> Run</Button>
+              <Button size="sm" variant="outline" onClick={() => run("mission")}><Play className="h-4 w-4 mr-1" /> {runs.mission === 0 ? "Run" : "Re-Run"}</Button>
             </div>
             <Progress value={runs.mission} />
+            {runs.mission === 100 ? <div className="text-xs text-emerald-400">System Ready</div> : null}
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div>Charge Warhead</div>
-              <Button size="sm" variant="outline" onClick={() => run("charge")}><Play className="h-4 w-4 mr-1" /> Run</Button>
+              <Button size="sm" variant="outline" onClick={() => run("charge")}><Play className="h-4 w-4 mr-1" /> {runs.charge === 0 ? "Run" : "Re-Run"}</Button>
             </div>
             <Progress value={runs.charge} />
+            {runs.charge === 100 ? <div className="text-xs text-emerald-400">System Ready</div> : null}
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div>Enable Firing</div>
-              <Button size="sm" variant="outline" onClick={() => run("enable")}><Play className="h-4 w-4 mr-1" /> Run</Button>
+              <Button size="sm" variant="outline" onClick={() => run("enable")}><Play className="h-4 w-4 mr-1" /> {runs.enable === 0 ? "Run" : "Re-Run"}</Button>
             </div>
             <Progress value={runs.enable} />
+            {runs.enable === 100 ? <div className="text-xs text-emerald-400">System Ready</div> : null}
           </div>
         </CardContent>
       </Card>
@@ -92,7 +97,7 @@ export function ArmingPanel({ armed, setArmed }: { armed: boolean; setArmed: (b:
             <Button variant={coverFlipped ? "secondary" : "outline"} onClick={() => setCoverFlipped((v) => !v)}>
               {coverFlipped ? "Safety Cover: OPEN" : "Flip Safety Cover"}
             </Button>
-            <input className="flex h-10 rounded-md border px-3 text-sm bg-background" placeholder="Passcode (7825)" value={pass} onChange={(e)=>setPass(e.target.value)} />
+            <input className="flex h-10 rounded-md border px-3 text-sm bg-background" placeholder="Passcode" value={pass} onChange={(e)=>setPass(e.target.value)} />
           </div>
           <Separator />
           <div className="flex items-center gap-3">
