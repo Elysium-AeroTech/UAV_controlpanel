@@ -8,7 +8,12 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, User } from "lucide-react";
 import { TelemetryPanel, type Health } from "@/components/console/TelemetryPanel";
-// import { DestinationPanel } from "@/components/console/DestinationPanel";
+// // import { DestinationPanel } from "@/components/console/DestinationPanel";
+import { NavigationPanel } from "@/components/console/NavigationPanel";
+import { ArmingPanel } from "@/components/console/ArmingPanel";
+import { SafetyChecksPanel } from "@/components/console/SafetyChecksPanel";
+import { CommunicationPanel } from "@/components/console/CommunicationPanel";
+import { LaunchPanel } from "@/components/console/LaunchPanel";
 import { NavigationPanel } from "@/components/console/NavigationPanel";
 import { ArmingPanel } from "@/components/console/ArmingPanel";
 import { SafetyChecksPanel } from "@/components/console/SafetyChecksPanel";
@@ -45,6 +50,7 @@ export default function Index() {
   const [lon, setLon] = useState(77.2090);
   const [curLat, setCurLat] = useState<number | null>(null);
   const [curLon, setCurLon] = useState<number | null>(null);
+  const [targetLocked, setTargetLocked] = useState(false);
 
   const systemStatus = useMemo(() => (isAuthed ? "SECURE" : "LOCKED"), [isAuthed]);
 
@@ -125,6 +131,8 @@ export default function Index() {
                   lat={lat}
                   lon={lon}
                   onSet={(la, lo) => { setLat(la); setLon(lo); }}
+                  locked={targetLocked}
+                  onLockedChange={setTargetLocked}
                 />
               </TabsContent>
 
@@ -141,16 +149,14 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="launch" className="mt-4">
-                <LaunchSequencePanel
-                  emailOk={authOk}
-                  commanderOk={true}
-                  consentOk={true}
+                <LaunchPanel
+                  authOk={authOk}
                   safetyVerified={safetyVerified}
                   safetyArmed={safetyArmed}
-                  distanceKm={(function(){
-                    const R=6371; const dLat=((lat-(curLat ?? 28.6139))*Math.PI)/180; const dLon=((lon-(curLon ?? 77.209))*Math.PI)/180; const A=Math.sin(dLat/2)**2+Math.cos((curLat ?? 28.6139)*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLon/2)**2; const c=2*Math.atan2(Math.sqrt(A),Math.sqrt(1-A)); return R*c;})()}
                   telemetryOk={health === "OK"}
-                  onLaunch={() => alert("Launch sequence initiated (demo)")}
+                  batteryPct={battery}
+                  navLocked={true}
+                  targetLocked={targetLocked}
                 />
               </TabsContent>
             </Tabs>
