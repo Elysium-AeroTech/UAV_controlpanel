@@ -12,6 +12,8 @@ export function CommunicationPanel() {
   const [power, setPower] = useState(25);
   const [encryption, setEncryption] = useState("AES-128");
   const [modulation, setModulation] = useState("QPSK");
+  const [cfgPass, setCfgPass] = useState("");
+  const cfgUnlocked = cfgPass === "795846";
 
   const metrics = useMemo(() => ({
     rssi: -62,
@@ -70,31 +72,35 @@ export function CommunicationPanel() {
           <CardTitle>Link Configuration</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Input placeholder="Config Passcode" value={cfgPass} onChange={(e)=>setCfgPass(e.target.value)} />
+            <Badge variant={cfgUnlocked ? "secondary" : "outline"}>{cfgUnlocked ? "Unlocked" : "Locked"}</Badge>
+          </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
               <Label>Frequency (GHz)</Label>
-              <Input className="mt-1" type="number" value={freq} onChange={(e)=>setFreq(Number(e.target.value))} />
+              <Input className="mt-1" type="number" value={freq} onChange={(e)=>setFreq(Number(e.target.value))} disabled={!cfgUnlocked} />
             </div>
             <div>
               <Label>Power (dBm)</Label>
-              <Input className="mt-1" type="number" value={power} onChange={(e)=>setPower(Number(e.target.value))} />
+              <Input className="mt-1" type="number" value={power} onChange={(e)=>setPower(Number(e.target.value))} disabled={!cfgUnlocked} />
             </div>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
               <Label>Encryption</Label>
-              <Input className="mt-1" value={encryption} onChange={(e)=>setEncryption(e.target.value)} />
+              <Input className="mt-1" value={encryption} onChange={(e)=>setEncryption(e.target.value)} disabled={!cfgUnlocked} />
             </div>
             <div>
               <Label>Modulation</Label>
-              <Input className="mt-1" value={modulation} onChange={(e)=>setModulation(e.target.value)} />
+              <Input className="mt-1" value={modulation} onChange={(e)=>setModulation(e.target.value)} disabled={!cfgUnlocked} />
             </div>
           </div>
           <Separator />
           <div className="grid sm:grid-cols-3 gap-2">
-            <Button variant="outline" onClick={()=>setStatus("Attempting")}>Restart Module</Button>
-            <Button variant="outline">Rebind / Resync</Button>
-            <Button variant="outline">Ping UAV</Button>
+            <Button variant="outline" onClick={()=>setStatus("Attempting")} disabled={!cfgUnlocked}>Restart Module</Button>
+            <Button variant="outline" disabled={!cfgUnlocked}>Rebind / Resync</Button>
+            <Button variant="outline" disabled={!cfgUnlocked}>Ping UAV</Button>
           </div>
         </CardContent>
       </Card>
