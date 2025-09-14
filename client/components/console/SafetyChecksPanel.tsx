@@ -53,8 +53,8 @@ export function SafetyChecksPanel({ verified, setVerified }: { verified: boolean
           {CHECKS.map((k) => (
             <div key={k} className="space-y-2">
               <div className="flex items-center justify-between">
-                <div>{k}</div>
-                <Button size="sm" variant="outline" onClick={() => run(k)}>Run</Button>
+                <div>{k} {progress[k] === 100 ? <span className="text-emerald-400 text-xs ml-2">Good to GO</span> : null}</div>
+                <Button size="sm" variant="outline" onClick={() => run(k)}>{progress[k] === 0 ? "Run" : "Check"}</Button>
               </div>
               <Progress value={progress[k]} />
             </div>
@@ -67,8 +67,8 @@ export function SafetyChecksPanel({ verified, setVerified }: { verified: boolean
           <CardTitle>Verify Safety</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="text-sm text-muted-foreground">All checks must pass, then enter passcode 2413</div>
-          <Input placeholder="Passcode (2413)" value={code} onChange={(e)=>setCode(e.target.value)} />
+          <div className="text-sm text-muted-foreground">All checks must pass, then enter passcode</div>
+          <Input placeholder="Passcode" value={code} onChange={(e)=>setCode(e.target.value)} disabled={!allPassed} />
           <Button disabled={!allPassed || code !== "2413"} onClick={() => setVerified(true)} className="w-full">
             {verified ? "Verified" : "Verify"}
           </Button>
