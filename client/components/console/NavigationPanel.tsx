@@ -38,11 +38,11 @@ function haversineKm(aLat: number, aLon: number, bLat: number, bLon: number) {
   return R * c;
 }
 
-export function NavigationPanel({ curLat, curLon, speedMS, lat, lon, onSet }: { curLat: number; curLon: number; speedMS: number; lat: number; lon: number; onSet: (lat: number, lon: number) => void }) {
+export function NavigationPanel({ curLat, curLon, speedMS, lat, lon, onSet, locked, onLockedChange }: { curLat: number; curLon: number; speedMS: number; lat: number; lon: number; onSet: (lat: number, lon: number) => void; locked: boolean; onLockedChange: (b: boolean) => void }) {
   const [selected, setSelected] = useState<string>("");
   const [mode, setMode] = useState<"direct" | "guided">("direct");
   const [lockCode, setLockCode] = useState("");
-  const [locked, setLocked] = useState(false);
+  const [roundTrip, setRoundTrip] = useState(false);
 
   const target = useMemo(() => TARGETS.find((t) => t.name === selected) ?? null, [selected]);
 
@@ -104,10 +104,12 @@ export function NavigationPanel({ curLat, curLon, speedMS, lat, lon, onSet }: { 
           </div>
           <div className="text-sm text-muted-foreground">Distance: {distanceKm ? `${distanceKm.toFixed(1)} km` : "—"} {etaMin ? `• ETA: ${etaMin} min` : ""}</div>
           <Separator />
-          <div className="grid sm:grid-cols-2 gap-2">
-            <Input placeholder="Lock code (351478)" value={lockCode} onChange={(e)=>setLockCode(e.target.value)} />
-            <Button onClick={() => { if (lockCode === "351478") { setLocked(true); if (target) onSet(target.lat, target.lon); } }} disabled={locked || !selected}>LOCK TARGET</Button>
+          <div className="grid sm:grid-cols-3 gap-2">
+            <Input placeholder="Lock code" value={lockCode} onChange={(e)=>setLockCode(e.target.value)} />
+            <Button onClick={() => { if (lockCode === "351478") { onLockedChange(true); if (target) onSet(target.lat, target.lon); } }} disabled={locked || !selected}>LOCK TARGET</Button>
+            <Button variant="outline" onClick={() => setRoundTrip((v)=>!v)}>{roundTrip ? "Round Trip: ON" : "Round Trip: OFF"}</Button>
           </div>
+          {locked ? <div className="text-emerald-400 text-sm">Target Locked</div> : null}
         </CardContent>
       </Card>
 
