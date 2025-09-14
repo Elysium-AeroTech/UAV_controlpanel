@@ -7,7 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, User } from "lucide-react";
-import { TelemetryPanel, type Health } from "@/components/console/TelemetryPanel";
+import {
+  TelemetryPanel,
+  type Health,
+} from "@/components/console/TelemetryPanel";
 // // import { DestinationPanel } from "@/components/console/DestinationPanel";
 import { NavigationPanel } from "@/components/console/NavigationPanel";
 import { ArmingPanel } from "@/components/console/ArmingPanel";
@@ -28,7 +31,9 @@ export default function Index() {
   const [commander, setCommander] = useState<string>("");
   const [password, setPassword] = useState("");
 
-  const authOk = CREW.some((c) => c.name === commander && c.password === password);
+  const authOk = CREW.some(
+    (c) => c.name === commander && c.password === password,
+  );
   const isAuthed = authOk;
 
   // Telemetry state (live or test-injected)
@@ -37,16 +42,24 @@ export default function Index() {
   const [speed, setSpeed] = useState(120);
   const [motorTemp, setMotorTemp] = useState(72);
   const [altitude, setAltitude] = useState(1500);
-  const health: Health = motorTemp < 90 && battery > 40 ? "OK" : motorTemp < 120 ? "Warning" : "Critical";
+  const health: Health =
+    motorTemp < 90 && battery > 40
+      ? "OK"
+      : motorTemp < 120
+        ? "Warning"
+        : "Critical";
 
   // Destination
   const [lat, setLat] = useState(28.6139);
-  const [lon, setLon] = useState(77.2090);
+  const [lon, setLon] = useState(77.209);
   const [curLat, setCurLat] = useState<number | null>(null);
   const [curLon, setCurLon] = useState<number | null>(null);
   const [targetLocked, setTargetLocked] = useState(false);
 
-  const systemStatus = useMemo(() => (isAuthed ? "SECURE" : "LOCKED"), [isAuthed]);
+  const systemStatus = useMemo(
+    () => (isAuthed ? "SECURE" : "LOCKED"),
+    [isAuthed],
+  );
 
   // Safety shared state
   const [safetyVerified, setSafetyVerified] = useState(false);
@@ -59,19 +72,38 @@ export default function Index() {
         {!isAuthed ? (
           <Card className="max-w-3xl mx-auto">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Authorization Required</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-primary" /> Authorization
+                Required
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="grid md:grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label>Commander</Label>
-                  <Input placeholder="prerit roshan / raghav jindal" value={commander} onChange={(e) => setCommander(e.target.value)} />
-                  <div className="text-xs text-muted-foreground">Type the name exactly</div>
+                  <Input
+                    placeholder="prerit roshan / raghav jindal"
+                    value={commander}
+                    onChange={(e) => setCommander(e.target.value)}
+                  />
+                  <div className="text-xs text-muted-foreground">
+                    Type the name exactly
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Password</Label>
-                  <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                  <Badge variant={authOk ? "secondary" : "outline"} className="mt-6"><User className="h-3 w-3 mr-1" /> {authOk ? "Validated" : "Pending"}</Badge>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <Badge
+                    variant={authOk ? "secondary" : "outline"}
+                    className="mt-6"
+                  >
+                    <User className="h-3 w-3 mr-1" />{" "}
+                    {authOk ? "Validated" : "Pending"}
+                  </Badge>
                 </div>
               </div>
               <Separator />
@@ -99,10 +131,18 @@ export default function Index() {
               </div>
 
               <TabsContent value="dashboard" className="mt-4 space-y-4">
-                <TelemetryPanel rpm={rpm} batteryPct={battery} speed={speed} motorTemp={motorTemp} health={health} />
+                <TelemetryPanel
+                  rpm={rpm}
+                  batteryPct={battery}
+                  speed={speed}
+                  motorTemp={motorTemp}
+                  health={health}
+                />
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Status</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      <ShieldCheck className="h-5 w-5 text-primary" /> Status
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
                     <div className="p-3 rounded border bg-secondary/30">
@@ -124,18 +164,28 @@ export default function Index() {
                   speedMS={speed}
                   lat={lat}
                   lon={lon}
-                  onSet={(la, lo) => { setLat(la); setLon(lo); }}
+                  onSet={(la, lo) => {
+                    setLat(la);
+                    setLon(lo);
+                  }}
                   locked={targetLocked}
                   onLockedChange={setTargetLocked}
                 />
               </TabsContent>
 
               <TabsContent value="manual" className="mt-4">
-                <ManualControlPanel speedMS={speed} altitudeM={altitude} powerPct={battery} />
+                <ManualControlPanel
+                  speedMS={speed}
+                  altitudeM={altitude}
+                  powerPct={battery}
+                />
               </TabsContent>
 
               <TabsContent value="safety" className="mt-4">
-                <SafetyChecksPanel verified={safetyVerified} setVerified={setSafetyVerified} />
+                <SafetyChecksPanel
+                  verified={safetyVerified}
+                  setVerified={setSafetyVerified}
+                />
               </TabsContent>
 
               <TabsContent value="comms" className="mt-4">
