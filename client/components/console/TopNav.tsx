@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Shield, Crosshair, GaugeCircle } from "lucide-react";
 
