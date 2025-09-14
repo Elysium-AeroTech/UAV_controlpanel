@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Gamepad2, Key, Radar, Scan, Move, Crosshair, SunMoon, Target, Zap, Eye, EyeOff, Satellite, Shield, Compass, AlertTriangle } from "lucide-react";
 
-const COMMANDER_CODE = "980752";
+const COMMANDER_CODE = "702356";
 
 export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: number; altitudeM: number; powerPct: number }) {
   const [unlocked, setUnlocked] = useState(false);
@@ -19,11 +19,21 @@ export function ManualControlPanel({ speedMS, altitudeM, powerPct }: { speedMS: 
         <CardTitle className="flex items-center gap-2"><Gamepad2 className="h-5 w-5 text-primary" /> Manual Flight Console</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="relative h-72 w-full rounded border border-primary/40 bg-black/60 overflow-hidden mb-4">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/No_video_image.svg" alt="UAV Not linked" className="absolute inset-0 h-full w-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,255,120,0.08)_4px)]" />
+          <div className="absolute inset-0 grid place-items-center">
+            <div className="rounded-full h-28 w-28 border-2 border-primary/60" />
+            <div className="absolute h-0.5 w-24 bg-primary/60" />
+          </div>
+          <div className="absolute bottom-2 left-2 text-xs text-muted-foreground">UAV Camera</div>
+        </div>
+
         {!unlocked ? (
           <div className="space-y-3">
-            <div className="text-sm text-muted-foreground">Enter Commander's Code to unlock manual controls.</div>
+            <div className="text-sm text-muted-foreground">Enter Control Code to unlock manual controls.</div>
             <div className="flex gap-2 max-w-md">
-              <Input placeholder="Commander's Code" value={code} onChange={(e) => setCode(e.target.value)} />
+              <Input placeholder="Control Code" value={code} onChange={(e) => setCode(e.target.value)} />
               <Button onClick={() => setUnlocked(code === COMMANDER_CODE)}><Key className="h-4 w-4 mr-2" /> Unlock</Button>
             </div>
           </div>
