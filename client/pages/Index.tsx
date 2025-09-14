@@ -6,36 +6,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, KeyRound, User, Users } from "lucide-react";
+import { ShieldCheck, User } from "lucide-react";
 import { TelemetryPanel, type Health } from "@/components/console/TelemetryPanel";
-import { DestinationPanel } from "@/components/console/DestinationPanel";
+// import { DestinationPanel } from "@/components/console/DestinationPanel";
+import { NavigationPanel } from "@/components/console/NavigationPanel";
+import { ArmingPanel } from "@/components/console/ArmingPanel";
+import { SafetyChecksPanel } from "@/components/console/SafetyChecksPanel";
+import { CommunicationPanel } from "@/components/console/CommunicationPanel";
 import { SafetyPanel } from "@/components/console/SafetyPanel";
 import { LaunchSequencePanel } from "@/components/console/LaunchSequencePanel";
 import { ManualControlPanel } from "@/components/console/ManualControlPanel";
 import { TestConsole } from "@/components/console/TestConsole";
 import { TopNav } from "@/components/console/TopNav";
 
-const HARD = {
-  email: "commander.prerit@elysium.io",
-  password: "Prerit@9807",
-  commanderCode: "980752",
-  preritCode: "980752",
-  raghavCode: "13579",
-};
+const CREW = [
+  { name: "prerit roshan", password: "980752" },
+  { name: "raghav jindal", password: "13579" },
+] as const;
 
 export default function Index() {
   // Auth state
-  const [email, setEmail] = useState("");
+  const [commander, setCommander] = useState<string>("");
   const [password, setPassword] = useState("");
-  const [commanderCode, setCommanderCode] = useState("");
-  const [prerit, setPrerit] = useState("");
-  const [raghav, setRaghav] = useState("");
-  const [requireTwoPerson, setRequireTwoPerson] = useState(true);
 
-  const emailOk = email === HARD.email && password === HARD.password;
-  const commanderOk = commanderCode === HARD.commanderCode;
-  const twoOk = prerit === HARD.preritCode && raghav === HARD.raghavCode;
-  const isAuthed = emailOk && commanderOk && (requireTwoPerson ? twoOk : true);
+  const authOk = CREW.some((c) => c.name === commander && c.password === password);
+  const isAuthed = authOk;
 
   // Telemetry state (live or test-injected)
   const [rpm, setRpm] = useState(6200);
@@ -59,7 +54,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
-      <TopNav status={systemStatus} />
+      <TopNav status={systemStatus} commanderName={commander || undefined} />
       <main className="container mx-auto px-4 py-6">
         {!isAuthed ? (
           <Card className="max-w-3xl mx-auto">
@@ -67,32 +62,16 @@ export default function Index() {
               <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Authorization Required</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
-              <div className="grid md:grid-cols-3 gap-3">
+              <div className="grid md:grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label>Email</Label>
-                  <Input placeholder="commander@domain" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Label>Commander</Label>
+                  <Input placeholder="prerit roshan / raghav jindal" value={commander} onChange={(e) => setCommander(e.target.value)} />
+                  <div className="text-xs text-muted-foreground">Type the name exactly</div>
+                </div>
+                <div className="space-y-2">
                   <Label>Password</Label>
                   <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                  <div className="text-xs text-muted-foreground">Login as Commander</div>
-                  <Badge variant={emailOk ? "secondary" : "outline"} className="mt-1"><User className="h-3 w-3 mr-1" /> {emailOk ? "Validated" : "Pending"}</Badge>
-                </div>
-                <div className="space-y-2">
-                  <Label>Commander's Code</Label>
-                  <Input placeholder="Enter code" value={commanderCode} onChange={(e) => setCommanderCode(e.target.value)} />
-                  <div className="text-xs text-muted-foreground">Second step</div>
-                  <Badge variant={commanderOk ? "secondary" : "outline"} className="mt-6"><KeyRound className="h-3 w-3 mr-1" /> {commanderOk ? "Verified" : "Required"}</Badge>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Two-Person Consent</Label>
-                    <Badge variant={requireTwoPerson ? "secondary" : "outline"}>{requireTwoPerson ? "ON" : "OFF"}</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Input placeholder="Prerit's Code" value={prerit} onChange={(e) => setPrerit(e.target.value)} disabled={!requireTwoPerson} />
-                    <Input placeholder="Raghav's Code" value={raghav} onChange={(e) => setRaghav(e.target.value)} disabled={!requireTwoPerson} />
-                  </div>
-                  <div className="text-xs text-muted-foreground">Both must authenticate</div>
-                  <Badge variant={requireTwoPerson ? (twoOk ? "secondary" : "outline") : "secondary"} className="mt-1"><Users className="h-3 w-3 mr-1" /> {requireTwoPerson ? (twoOk ? "Consent Granted" : "Awaiting Codes") : "Bypassed (Test)"}</Badge>
+                  <Badge variant={authOk ? "secondary" : "outline"} className="mt-6"><User className="h-3 w-3 mr-1" /> {authOk ? "Validated" : "Pending"}</Badge>
                 </div>
               </div>
               <Separator />
@@ -107,15 +86,15 @@ export default function Index() {
               <div className="flex items-center justify-between">
                 <TabsList>
                   <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-                  <TabsTrigger value="safety">Safety & Arming</TabsTrigger>
-                  <TabsTrigger value="destination">Destination</TabsTrigger>
-                  <TabsTrigger value="manual">Manual Control</TabsTrigger>
-                  <TabsTrigger value="launch">Launch Sequence</TabsTrigger>
+                  <TabsTrigger value="arming">Arming</TabsTrigger>
+                  <TabsTrigger value="navigation">Navigation</TabsTrigger>
+                  <TabsTrigger value="manual">Manual</TabsTrigger>
+                  <TabsTrigger value="safety">Safety</TabsTrigger>
+                  <TabsTrigger value="comms">Communication</TabsTrigger>
+                  <TabsTrigger value="launch">Launch</TabsTrigger>
                 </TabsList>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
-                  <span>Commander: prerit roshan</span>
-                  <span>•</span>
-                  <span>Consent: {requireTwoPerson ? (twoOk ? "Active" : "Required") : "Disabled"}</span>
+                  <span>Commander: {commander}</span>
                 </div>
               </div>
 
@@ -128,45 +107,48 @@ export default function Index() {
                   <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
                     <div className="p-3 rounded border bg-secondary/30">
                       <div className="text-muted-foreground">Login</div>
-                      <div className="font-mono">{emailOk ? "OK" : "FAIL"}</div>
-                    </div>
-                    <div className="p-3 rounded border bg-secondary/30">
-                      <div className="text-muted-foreground">Commander Code</div>
-                      <div className="font-mono">{commanderOk ? "OK" : "FAIL"}</div>
-                    </div>
-                    <div className="p-3 rounded border bg-secondary/30">
-                      <div className="text-muted-foreground">Two-Person</div>
-                      <div className="font-mono">{requireTwoPerson ? (twoOk ? "OK" : "WAIT") : "OFF"}</div>
+                      <div className="font-mono">{authOk ? "OK" : "FAIL"}</div>
                     </div>
                   </CardContent>
                 </Card>
               </TabsContent>
 
-              <TabsContent value="safety" className="mt-4">
-                <SafetyPanel
-                  verified={safetyVerified}
-                  setVerified={setSafetyVerified}
-                  armed={safetyArmed}
-                  setArmed={setSafetyArmed}
-                />
+              <TabsContent value="arming" className="mt-4">
+                <ArmingPanel armed={safetyArmed} setArmed={setSafetyArmed} />
               </TabsContent>
 
-              <TabsContent value="destination" className="mt-4">
-                <DestinationPanel lat={lat} lon={lon} curLat={curLat} curLon={curLon} onSet={(la, lo) => { setLat(la); setLon(lo); }} onSetCurrent={(cla, clo) => { setCurLat(cla); setCurLon(clo); }} />
+              <TabsContent value="navigation" className="mt-4">
+                <NavigationPanel
+                  curLat={curLat ?? 28.6139}
+                  curLon={curLon ?? 77.209}
+                  speedMS={speed}
+                  lat={lat}
+                  lon={lon}
+                  onSet={(la, lo) => { setLat(la); setLon(lo); }}
+                />
               </TabsContent>
 
               <TabsContent value="manual" className="mt-4">
                 <ManualControlPanel speedMS={speed} altitudeM={altitude} powerPct={battery} />
               </TabsContent>
+
+              <TabsContent value="safety" className="mt-4">
+                <SafetyChecksPanel verified={safetyVerified} setVerified={setSafetyVerified} />
+              </TabsContent>
+
+              <TabsContent value="comms" className="mt-4">
+                <CommunicationPanel />
+              </TabsContent>
+
               <TabsContent value="launch" className="mt-4">
                 <LaunchSequencePanel
-                  emailOk={emailOk}
-                  commanderOk={commanderOk}
-                  consentOk={requireTwoPerson ? twoOk : true}
+                  emailOk={authOk}
+                  commanderOk={true}
+                  consentOk={true}
                   safetyVerified={safetyVerified}
                   safetyArmed={safetyArmed}
-                  distanceKm={curLat != null && curLon != null ? (function(){
-                    const R=6371; const dLat=((lat-curLat)*Math.PI)/180; const dLon=((lon-curLon)*Math.PI)/180; const A=Math.sin(dLat/2)**2+Math.cos(curLat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLon/2)**2; const c=2*Math.atan2(Math.sqrt(A),Math.sqrt(1-A)); return R*c;})() : null}
+                  distanceKm={(function(){
+                    const R=6371; const dLat=((lat-(curLat ?? 28.6139))*Math.PI)/180; const dLon=((lon-(curLon ?? 77.209))*Math.PI)/180; const A=Math.sin(dLat/2)**2+Math.cos((curLat ?? 28.6139)*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLon/2)**2; const c=2*Math.atan2(Math.sqrt(A),Math.sqrt(1-A)); return R*c;})()}
                   telemetryOk={health === "OK"}
                   onLaunch={() => alert("Launch sequence initiated (demo)")}
                 />
@@ -187,8 +169,8 @@ export default function Index() {
         setSpeed={setSpeed}
         setMotorTemp={setMotorTemp}
         setAltitude={setAltitude}
-        requireTwoPerson={requireTwoPerson}
-        setRequireTwoPerson={setRequireTwoPerson}
+        requireTwoPerson={false}
+        setRequireTwoPerson={() => {}}
       />
     </div>
   );
