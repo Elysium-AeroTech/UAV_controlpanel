@@ -34,7 +34,10 @@ export default function Index() {
   const authOk = CREW.some(
     (c) => c.name === commander && c.password === password,
   );
-  const isAuthed = authOk;
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [loginProgress, setLoginProgress] = useState(0);
+  const isAuthed = loggedIn;
 
   // Telemetry state (live or test-injected)
   const [rpm, setRpm] = useState(0);
