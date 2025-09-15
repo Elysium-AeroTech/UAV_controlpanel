@@ -16,6 +16,8 @@ export function CommunicationPanel() {
   const [modulation, setModulation] = useState("QPSK");
   const [cfgPass, setCfgPass] = useState("");
   const cfgUnlocked = cfgPass === "795846";
+  const [primaryOn, setPrimaryOn] = useState(true);
+  const [secondaryOn, setSecondaryOn] = useState(false);
 
   const metrics = useMemo(
     () => ({
@@ -105,7 +107,6 @@ export function CommunicationPanel() {
                 type="number"
                 value={freq}
                 onChange={(e) => setFreq(Number(e.target.value))}
-                disabled={!cfgUnlocked}
               />
             </div>
             <div>
@@ -115,7 +116,6 @@ export function CommunicationPanel() {
                 type="number"
                 value={power}
                 onChange={(e) => setPower(Number(e.target.value))}
-                disabled={!cfgUnlocked}
               />
             </div>
           </div>
@@ -126,7 +126,6 @@ export function CommunicationPanel() {
                 className="mt-1"
                 value={encryption}
                 onChange={(e) => setEncryption(e.target.value)}
-                disabled={!cfgUnlocked}
               />
             </div>
             <div>
@@ -135,25 +134,29 @@ export function CommunicationPanel() {
                 className="mt-1"
                 value={modulation}
                 onChange={(e) => setModulation(e.target.value)}
-                disabled={!cfgUnlocked}
               />
             </div>
           </div>
           <Separator />
           <div className="grid sm:grid-cols-3 gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setStatus("Attempting")}
-              disabled={!cfgUnlocked}
-            >
+            <Button variant="outline" onClick={() => setStatus("Attempting")}>
               Restart Module
             </Button>
-            <Button variant="outline" disabled={!cfgUnlocked}>
-              Rebind / Resync
+            <Button variant="outline">Rebind / Resync</Button>
+            <Button variant="outline">Ping Sudharshan</Button>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-2 mt-2">
+            <Button variant={primaryOn ? "secondary" : "outline"} onClick={() => setPrimaryOn((v) => !v)}>
+              Primary Comms: {primaryOn ? "ON" : "OFF"}
             </Button>
-            <Button variant="outline" disabled={!cfgUnlocked}>
-              Ping UAV
+            <Button variant={secondaryOn ? "secondary" : "outline"} onClick={() => setSecondaryOn((v) => !v)}>
+              Secondary Comms: {secondaryOn ? "ON" : "OFF"}
             </Button>
+          </div>
+          <Separator />
+          <div className="flex items-center gap-2">
+            <Button disabled={!cfgUnlocked}>Save Settings</Button>
+            <div className="text-xs text-muted-foreground">Enter passcode to enable saving.</div>
           </div>
         </CardContent>
       </Card>
