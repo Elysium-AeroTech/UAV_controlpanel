@@ -85,7 +85,8 @@ export function NavigationPanel({
     if (!distanceKm) return null;
     const kmph = speedMS * 3.6;
     const baseMin = (distanceKm / Math.max(1, kmph)) * 60;
-    return Math.round(baseMin * (mode === "guided" ? 1.15 : 1));
+    const mult = (mode === "guided" ? 1.15 : 1) * (roundTrip ? 2 : 1);
+    return Math.round(baseMin * mult);
   }, [distanceKm, speedMS, mode]);
 
   const mapUrl = useMemo(() => {
@@ -95,6 +96,20 @@ export function NavigationPanel({
     const bbox = [lo - d, la - d, lo + d, la + d].join(",");
     return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${la},${lo}`;
   }, [target, lat, lon]);
+
+  const pathPoints = useMemo(() => {
+    if (!locked || !target) return null;
+    const la = target.lat, lo = target.lon;
+    const d = 0.08;
+    const left = lo - d, right = lo + d, top = la + d, bottom = la - d;
+    const norm = (L: number, B: number) => ({
+      x: ((B - left) / (right - left)) * 100,
+      y: ((top - L) / (top - bottom)) * 100,
+    });
+    const a = norm(curLat, curLon);
+    const b = norm(la, lo);
+    return { a, b };
+  }, [locked, target, curLat, curLon]);
 
   return (
     <div className="grid md:grid-cols-2 gap-4">
@@ -193,8 +208,13 @@ export function NavigationPanel({
           <CardTitle>Map Preview</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="aspect-video rounded border overflow-hidden">
+          <div className="aspect-video rounded border overflow-hidden relative">
             <iframe title="map" src={mapUrl} className="w-full h-full" />
+            {pathPoints ? (
+              <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                <line x1={`${pathPoints.a.x}%`} y1={`${pathPoints.a.y}%`} x2={`${pathPoints.b.x}%`} y2={`${pathPoints.b.y}%`} stroke="hsl(var(--primary))" strokeWidth="2" strokeDasharray="4 3" />
+              </svg>
+            ) : null}
           </div>
         </CardContent>
       </Card>
