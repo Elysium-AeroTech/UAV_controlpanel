@@ -79,7 +79,10 @@ export function NavigationPanel({
   );
 
   const distanceKm = useMemo(
-    () => (target ? haversineKm(ORIGIN.lat, ORIGIN.lon, target.lat, target.lon) : null),
+    () =>
+      target
+        ? haversineKm(ORIGIN.lat, ORIGIN.lon, target.lat, target.lon)
+        : null,
     [target],
   );
   const etaMin = useMemo(() => {
@@ -98,19 +101,25 @@ export function NavigationPanel({
     const minLon = Math.min(ORIGIN.lon, lo);
     const maxLon = Math.max(ORIGIN.lon, lo);
     const pad = 0.05;
-    const bbox = [minLon - pad, minLat - pad, maxLon + pad, maxLat + pad].join(",");
+    const bbox = [minLon - pad, minLat - pad, maxLon + pad, maxLat + pad].join(
+      ",",
+    );
     return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${la},${lo}`;
   }, [target, lat, lon]);
 
   const pathPoints = useMemo(() => {
     if (!locked || !target) return null;
-    const la = target.lat, lo = target.lon;
+    const la = target.lat,
+      lo = target.lon;
     const minLat = Math.min(ORIGIN.lat, la);
     const maxLat = Math.max(ORIGIN.lat, la);
     const minLon = Math.min(ORIGIN.lon, lo);
     const maxLon = Math.max(ORIGIN.lon, lo);
     const pad = 0.05;
-    const left = minLon - pad, right = maxLon + pad, top = maxLat + pad, bottom = minLat - pad;
+    const left = minLon - pad,
+      right = maxLon + pad,
+      top = maxLat + pad,
+      bottom = minLat - pad;
     const norm = (L: number, B: number) => ({
       x: Math.max(0, Math.min(100, ((B - left) / (right - left)) * 100)),
       y: Math.max(0, Math.min(100, ((top - L) / (top - bottom)) * 100)),
@@ -221,7 +230,15 @@ export function NavigationPanel({
             <iframe title="map" src={mapUrl} className="w-full h-full" />
             {pathPoints ? (
               <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                <line x1={`${pathPoints.a.x}%`} y1={`${pathPoints.a.y}%`} x2={`${pathPoints.b.x}%`} y2={`${pathPoints.b.y}%`} stroke="hsl(var(--primary))" strokeWidth="2" strokeDasharray="4 3" />
+                <line
+                  x1={`${pathPoints.a.x}%`}
+                  y1={`${pathPoints.a.y}%`}
+                  x2={`${pathPoints.b.x}%`}
+                  y2={`${pathPoints.b.y}%`}
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="2"
+                  strokeDasharray="4 3"
+                />
               </svg>
             ) : null}
           </div>

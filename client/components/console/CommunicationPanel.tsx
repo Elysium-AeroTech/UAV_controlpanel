@@ -146,17 +146,25 @@ export function CommunicationPanel() {
             <Button variant="outline">Ping Sudharshan</Button>
           </div>
           <div className="grid sm:grid-cols-2 gap-2 mt-2">
-            <Button variant={primaryOn ? "secondary" : "outline"} onClick={() => setPrimaryOn((v) => !v)}>
+            <Button
+              variant={primaryOn ? "secondary" : "outline"}
+              onClick={() => setPrimaryOn((v) => !v)}
+            >
               Primary Comms: {primaryOn ? "ON" : "OFF"}
             </Button>
-            <Button variant={secondaryOn ? "secondary" : "outline"} onClick={() => setSecondaryOn((v) => !v)}>
+            <Button
+              variant={secondaryOn ? "secondary" : "outline"}
+              onClick={() => setSecondaryOn((v) => !v)}
+            >
               Secondary Comms: {secondaryOn ? "ON" : "OFF"}
             </Button>
           </div>
           <Separator />
           <div className="flex items-center gap-2">
             <Button disabled={!cfgUnlocked}>Save Settings</Button>
-            <div className="text-xs text-muted-foreground">Enter passcode to enable saving.</div>
+            <div className="text-xs text-muted-foreground">
+              Enter passcode to enable saving.
+            </div>
           </div>
         </CardContent>
       </Card>

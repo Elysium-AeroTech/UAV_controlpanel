@@ -82,7 +82,12 @@ export function LaunchPanel({
       ok: targetLocked,
       icon: LockKeyhole,
     },
-    { label: "TRAJECTORY CALC", value: navLocked && targetLocked ? "Ready" : "Pending", ok: navLocked && targetLocked, icon: Route },
+    {
+      label: "TRAJECTORY CALC",
+      value: navLocked && targetLocked ? "Ready" : "Pending",
+      ok: navLocked && targetLocked,
+      icon: Route,
+    },
     {
       label: "BATTERY",
       value: `${batteryPct}%`,
@@ -101,7 +106,12 @@ export function LaunchPanel({
       ok: safetyVerified,
       icon: Satellite,
     },
-    { label: "REDUNDANCY", value: navLocked && targetLocked ? "OK" : "PENDING", ok: navLocked && targetLocked, icon: Shield },
+    {
+      label: "REDUNDANCY",
+      value: navLocked && targetLocked ? "OK" : "PENDING",
+      ok: navLocked && targetLocked,
+      icon: Shield,
+    },
     {
       label: "ENVIRONMENTAL",
       value: "Weather & wind OK",
