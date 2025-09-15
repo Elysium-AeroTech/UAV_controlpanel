@@ -24,7 +24,7 @@ export function TopNav({
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           {commanderName ? (
             <div className="hidden md:flex items-center gap-1">
-              <GaugeCircle className="h-4 w-4" /> {commanderName}
+              <GaugeCircle className="h-4 w-4" /> Adeshak: {commanderName}
             </div>
           ) : null}
           <Separator orientation="vertical" className="h-6" />
