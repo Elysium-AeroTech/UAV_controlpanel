@@ -57,8 +57,8 @@ export default function Index() {
   const [targetLocked, setTargetLocked] = useState(false);
 
   const systemStatus = useMemo(
-    () => (isAuthed ? "SECURE" : "LOCKED"),
-    [isAuthed],
+    () => (isAuthed ? "SECURE" : loggingIn ? "VERIFYING" : "LOCKED"),
+    [isAuthed, loggingIn],
   );
 
   // Safety shared state
