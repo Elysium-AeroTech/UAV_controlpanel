@@ -85,7 +85,7 @@ export default function Index() {
                 <div className="space-y-2">
                   <Label>Adeshak</Label>
                   <Input
-                    placeholder="prerit roshan / raghav jindal"
+                    placeholder="Enter Adeshak name"
                     value={commander}
                     onChange={(e) => setCommander(e.target.value)}
                   />
