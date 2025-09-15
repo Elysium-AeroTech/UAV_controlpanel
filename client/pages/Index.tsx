@@ -23,7 +23,7 @@ import { TopNav } from "@/components/console/TopNav";
 
 const CREW = [
   { name: "prerit roshan", password: "980752" },
-  { name: "raghav jindal", password: "13579" },
+  { name: "raghav jindal", password: "190508." },
 ] as const;
 
 export default function Index() {
