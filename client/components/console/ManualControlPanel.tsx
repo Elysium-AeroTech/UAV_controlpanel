@@ -48,7 +48,7 @@ export function ManualControlPanel({
         <div className="relative h-72 w-full rounded border border-primary/40 bg-black/60 overflow-hidden mb-4">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/5/58/No_video_image.svg"
-            alt="UAV Not linked"
+            alt="Sudharshan Not linked"
             className="absolute inset-0 h-full w-full object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,255,120,0.08)_4px)]" />
@@ -57,7 +57,7 @@ export function ManualControlPanel({
             <div className="absolute h-0.5 w-24 bg-primary/60" />
           </div>
           <div className="absolute bottom-2 left-2 text-xs text-muted-foreground">
-            UAV Camera
+            Sudharshan Camera
           </div>
         </div>
 
