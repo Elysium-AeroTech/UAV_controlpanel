@@ -110,9 +110,41 @@ export default function Index() {
                 </div>
               </div>
               <Separator />
-              <div className="flex justify-end">
-                <Button disabled={!isAuthed}>Enter Command</Button>
+              <div className="flex items-center justify-between">
+                {loggingIn ? (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="h-3 w-3 rounded-full bg-primary animate-ping" />
+                    Verifying credentials...
+                  </div>
+                ) : (
+                  <div className="text-xs text-muted-foreground">Enter valid credentials to continue.</div>
+                )}
+                <Button disabled={!authOk || loggingIn} onClick={() => {
+                  if (!authOk) return;
+                  setLoggingIn(true);
+                  setLoginProgress(0);
+                  const id = window.setInterval(() => {
+                    setLoginProgress((p) => {
+                      const n = Math.min(100, p + Math.floor(10 + Math.random() * 20));
+                      if (n >= 100) {
+                        clearInterval(id);
+                        setTimeout(() => {
+                          setLoggedIn(true);
+                          setLoggingIn(false);
+                        }, 300);
+                      }
+                      return n;
+                    });
+                  }, 150);
+                }}>Enter Command</Button>
               </div>
+              {loggingIn ? (
+                <div className="mt-3">
+                  <div className="h-2 w-full overflow-hidden rounded bg-secondary">
+                    <div className="h-2 bg-primary" style={{ width: `${Math.max(10, loginProgress)}%`, transition: 'width 0.15s ease' }} />
+                  </div>
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         ) : (
