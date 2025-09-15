@@ -48,6 +48,7 @@ function haversineKm(aLat: number, aLon: number, bLat: number, bLon: number) {
   return R * c;
 }
 
+const ORIGIN = { lat: 28.639, lon: 77.236 } as const;
 export function NavigationPanel({
   curLat,
   curLon,
@@ -78,8 +79,8 @@ export function NavigationPanel({
   );
 
   const distanceKm = useMemo(
-    () => (target ? haversineKm(curLat, curLon, target.lat, target.lon) : null),
-    [curLat, curLon, target],
+    () => (target ? haversineKm(ORIGIN.lat, ORIGIN.lon, target.lat, target.lon) : null),
+    [target],
   );
   const etaMin = useMemo(() => {
     if (!distanceKm) return null;
@@ -92,24 +93,32 @@ export function NavigationPanel({
   const mapUrl = useMemo(() => {
     const la = target?.lat ?? lat;
     const lo = target?.lon ?? lon;
-    const d = 0.08;
-    const bbox = [lo - d, la - d, lo + d, la + d].join(",");
+    const minLat = Math.min(ORIGIN.lat, la);
+    const maxLat = Math.max(ORIGIN.lat, la);
+    const minLon = Math.min(ORIGIN.lon, lo);
+    const maxLon = Math.max(ORIGIN.lon, lo);
+    const pad = 0.05;
+    const bbox = [minLon - pad, minLat - pad, maxLon + pad, maxLat + pad].join(",");
     return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${la},${lo}`;
   }, [target, lat, lon]);
 
   const pathPoints = useMemo(() => {
     if (!locked || !target) return null;
     const la = target.lat, lo = target.lon;
-    const d = 0.08;
-    const left = lo - d, right = lo + d, top = la + d, bottom = la - d;
+    const minLat = Math.min(ORIGIN.lat, la);
+    const maxLat = Math.max(ORIGIN.lat, la);
+    const minLon = Math.min(ORIGIN.lon, lo);
+    const maxLon = Math.max(ORIGIN.lon, lo);
+    const pad = 0.05;
+    const left = minLon - pad, right = maxLon + pad, top = maxLat + pad, bottom = minLat - pad;
     const norm = (L: number, B: number) => ({
-      x: ((B - left) / (right - left)) * 100,
-      y: ((top - L) / (top - bottom)) * 100,
+      x: Math.max(0, Math.min(100, ((B - left) / (right - left)) * 100)),
+      y: Math.max(0, Math.min(100, ((top - L) / (top - bottom)) * 100)),
     });
-    const a = norm(curLat, curLon);
+    const a = norm(ORIGIN.lat, ORIGIN.lon);
     const b = norm(la, lo);
     return { a, b };
-  }, [locked, target, curLat, curLon]);
+  }, [locked, target]);
 
   return (
     <div className="grid md:grid-cols-2 gap-4">
