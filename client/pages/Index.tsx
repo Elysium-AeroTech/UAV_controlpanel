@@ -80,7 +80,7 @@ export default function Index() {
             <CardContent className="space-y-5">
               <div className="grid md:grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label>Commander</Label>
+                  <Label>Adeshak</Label>
                   <Input
                     placeholder="prerit roshan / raghav jindal"
                     value={commander}
