@@ -37,11 +37,11 @@ export default function Index() {
   const isAuthed = authOk;
 
   // Telemetry state (live or test-injected)
-  const [rpm, setRpm] = useState(6200);
-  const [battery, setBattery] = useState(88);
-  const [speed, setSpeed] = useState(120);
-  const [motorTemp, setMotorTemp] = useState(72);
-  const [altitude, setAltitude] = useState(1500);
+  const [rpm, setRpm] = useState(0);
+  const [battery, setBattery] = useState(0);
+  const [speed, setSpeed] = useState(0);
+  const [motorTemp, setMotorTemp] = useState(0);
+  const [altitude, setAltitude] = useState(0);
   const health: Health =
     motorTemp < 90 && battery > 40
       ? "OK"
