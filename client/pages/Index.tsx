@@ -255,6 +255,7 @@ export default function Index() {
                   pageTitle="Navigation"
                   isLocked={pageLocks.navigation}
                   onLockChange={(locked) => updatePageLock("navigation", locked)}
+                  validCodes={["351478"]}
                 >
                   <NavigationPanel
                     curLat={curLat ?? 28.6139}
