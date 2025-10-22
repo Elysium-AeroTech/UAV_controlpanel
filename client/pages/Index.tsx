@@ -205,35 +205,35 @@ export default function Index() {
                 </div>
               </div>
 
-              <TabsContent value="dashboard" className="mt-4 space-y-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Dashboard</h2>
-                  <MastercodeInput
-                    pageTitle="Dashboard"
-                    isLocked={pageLocks.dashboard}
-                    onLockChange={(locked) => updatePageLock("dashboard", locked)}
-                  />
-                </div>
-                <TelemetryPanel
-                  rpm={rpm}
-                  batteryPct={battery}
-                  speed={speed}
-                  motorTemp={motorTemp}
-                  health={health}
-                />
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <ShieldCheck className="h-5 w-5 text-primary" /> Status
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
-                    <div className="p-3 rounded border bg-secondary/30">
-                      <div className="text-muted-foreground">Login</div>
-                      <div className="font-mono">{authOk ? "OK" : "FAIL"}</div>
-                    </div>
-                  </CardContent>
-                </Card>
+              <TabsContent value="dashboard" className="mt-4">
+                <MastercodeInput
+                  pageTitle="Dashboard"
+                  isLocked={pageLocks.dashboard}
+                  onLockChange={(locked) => updatePageLock("dashboard", locked)}
+                >
+                  <div className="space-y-4">
+                    <TelemetryPanel
+                      rpm={rpm}
+                      batteryPct={battery}
+                      speed={speed}
+                      motorTemp={motorTemp}
+                      health={health}
+                    />
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <ShieldCheck className="h-5 w-5 text-primary" /> Status
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
+                        <div className="p-3 rounded border bg-secondary/30">
+                          <div className="text-muted-foreground">Login</div>
+                          <div className="font-mono">{authOk ? "OK" : "FAIL"}</div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </MastercodeInput>
               </TabsContent>
 
               <TabsContent value="arming" className="mt-4">
