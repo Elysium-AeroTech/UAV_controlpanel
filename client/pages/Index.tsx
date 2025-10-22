@@ -21,6 +21,7 @@ import { ManualControlPanel } from "@/components/console/ManualControlPanel";
 import { TestConsole } from "@/components/console/TestConsole";
 import { TopNav } from "@/components/console/TopNav";
 import { MastercodeInput } from "@/components/console/MastercodeInput";
+import { AdminPanel } from "@/components/console/AdminPanel";
 
 const CREW = [
   { name: "prerit roshan", password: "980752" },
