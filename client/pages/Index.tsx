@@ -25,6 +25,12 @@ import { MastercodeInput } from "@/components/console/MastercodeInput";
 const CREW = [
   { name: "prerit roshan", password: "980752" },
   { name: "raghav jindal", password: "190508." },
+  { name: "Duclipse", password: "2302" },
+  { name: "Dev@2106", password: "2389" },
+  { name: "nisox", password: "0994" },
+  { name: "sanvi", password: "3867" },
+  { name: "vishwas", password: "3223" },
+  { name: "demo", password: "12345678" },
 ] as const;
 
 export default function Index() {
