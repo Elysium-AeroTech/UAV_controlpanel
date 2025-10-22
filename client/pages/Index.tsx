@@ -293,6 +293,7 @@ export default function Index() {
                   pageTitle="Safety"
                   isLocked={pageLocks.safety}
                   onLockChange={(locked) => updatePageLock("safety", locked)}
+                  validCodes={["2413"]}
                 >
                   <SafetyChecksPanel
                     verified={safetyVerified}
