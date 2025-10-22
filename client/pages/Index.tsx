@@ -65,6 +65,21 @@ export default function Index() {
     [isAuthed, loggingIn],
   );
 
+  // Page mastercode lock state
+  const [pageLocks, setPageLocks] = useState({
+    dashboard: false,
+    arming: false,
+    navigation: false,
+    manual: false,
+    safety: false,
+    comms: false,
+    launch: false,
+  });
+
+  const updatePageLock = (page: keyof typeof pageLocks, locked: boolean) => {
+    setPageLocks((prev) => ({ ...prev, [page]: locked }));
+  };
+
   // Safety shared state
   const [safetyVerified, setSafetyVerified] = useState(false);
   const [safetyArmed, setSafetyArmed] = useState(false);
