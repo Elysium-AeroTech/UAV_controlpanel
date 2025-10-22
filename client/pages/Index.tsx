@@ -265,6 +265,14 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="manual" className="mt-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold">Manual Control</h2>
+                  <MastercodeInput
+                    pageTitle="Manual Control"
+                    isLocked={pageLocks.manual}
+                    onLockChange={(locked) => updatePageLock("manual", locked)}
+                  />
+                </div>
                 <ManualControlPanel
                   speedMS={speed}
                   altitudeM={altitude}
