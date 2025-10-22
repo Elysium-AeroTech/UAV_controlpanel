@@ -322,6 +322,10 @@ export default function Index() {
                   />
                 </MastercodeInput>
               </TabsContent>
+
+              <TabsContent value="admin" className="mt-4">
+                <AdminPanel />
+              </TabsContent>
             </Tabs>
           </>
         )}
