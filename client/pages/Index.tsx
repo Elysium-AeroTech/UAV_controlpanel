@@ -318,6 +318,7 @@ export default function Index() {
                   pageTitle="Launch"
                   isLocked={pageLocks.launch}
                   onLockChange={(locked) => updatePageLock("launch", locked)}
+                  validCodes={["1458"]}
                 >
                   <LaunchPanel
                     authOk={authOk}
