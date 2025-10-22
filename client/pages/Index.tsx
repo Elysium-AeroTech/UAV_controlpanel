@@ -247,27 +247,25 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="navigation" className="mt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Navigation</h2>
-                  <MastercodeInput
-                    pageTitle="Navigation"
-                    isLocked={pageLocks.navigation}
-                    onLockChange={(locked) => updatePageLock("navigation", locked)}
+                <MastercodeInput
+                  pageTitle="Navigation"
+                  isLocked={pageLocks.navigation}
+                  onLockChange={(locked) => updatePageLock("navigation", locked)}
+                >
+                  <NavigationPanel
+                    curLat={curLat ?? 28.6139}
+                    curLon={curLon ?? 77.209}
+                    speedMS={speed}
+                    lat={lat}
+                    lon={lon}
+                    onSet={(la, lo) => {
+                      setLat(la);
+                      setLon(lo);
+                    }}
+                    locked={targetLocked}
+                    onLockedChange={setTargetLocked}
                   />
-                </div>
-                <NavigationPanel
-                  curLat={curLat ?? 28.6139}
-                  curLon={curLon ?? 77.209}
-                  speedMS={speed}
-                  lat={lat}
-                  lon={lon}
-                  onSet={(la, lo) => {
-                    setLat(la);
-                    setLon(lo);
-                  }}
-                  locked={targetLocked}
-                  onLockedChange={setTargetLocked}
-                />
+                </MastercodeInput>
               </TabsContent>
 
               <TabsContent value="manual" className="mt-4">
