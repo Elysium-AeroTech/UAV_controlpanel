@@ -244,6 +244,7 @@ export default function Index() {
                   pageTitle="Arming"
                   isLocked={pageLocks.arming}
                   onLockChange={(locked) => updatePageLock("arming", locked)}
+                  validCodes={["7825"]}
                 >
                   <ArmingPanel armed={safetyArmed} setArmed={setSafetyArmed} />
                 </MastercodeInput>
