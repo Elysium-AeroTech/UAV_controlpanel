@@ -12,24 +12,30 @@ export function MastercodeInput({
   isLocked,
   onLockChange,
   children,
+  validCodes = [],
 }: {
   pageTitle: string;
   isLocked: boolean;
   onLockChange: (locked: boolean) => void;
   children?: React.ReactNode;
+  validCodes?: string[];
 }) {
   const [code, setCode] = useState("");
   const [showInput, setShowInput] = useState(false);
   const [error, setError] = useState("");
 
+  const isValidCode = (inputCode: string) => {
+    return inputCode === MASTERCODE || validCodes.includes(inputCode);
+  };
+
   const handleSubmit = () => {
-    if (code === MASTERCODE) {
+    if (isValidCode(code)) {
       onLockChange(!isLocked);
       setCode("");
       setShowInput(false);
       setError("");
     } else {
-      setError("Invalid mastercode");
+      setError("Invalid code");
       setCode("");
     }
   };
