@@ -237,15 +237,13 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="arming" className="mt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Arming</h2>
-                  <MastercodeInput
-                    pageTitle="Arming"
-                    isLocked={pageLocks.arming}
-                    onLockChange={(locked) => updatePageLock("arming", locked)}
-                  />
-                </div>
-                <ArmingPanel armed={safetyArmed} setArmed={setSafetyArmed} />
+                <MastercodeInput
+                  pageTitle="Arming"
+                  isLocked={pageLocks.arming}
+                  onLockChange={(locked) => updatePageLock("arming", locked)}
+                >
+                  <ArmingPanel armed={safetyArmed} setArmed={setSafetyArmed} />
+                </MastercodeInput>
               </TabsContent>
 
               <TabsContent value="navigation" className="mt-4">
