@@ -212,6 +212,7 @@ export default function Index() {
                   pageTitle="Dashboard"
                   isLocked={pageLocks.dashboard}
                   onLockChange={(locked) => updatePageLock("dashboard", locked)}
+                  validCodes={["980752", "13579"]}
                 >
                   <div className="space-y-4">
                     <TelemetryPanel
