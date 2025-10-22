@@ -177,7 +177,7 @@ export default function Index() {
                   <TabsTrigger value="launch">Launch</TabsTrigger>
                 </TabsList>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
-                  <span>Commander: {commander}</span>
+                  <span>Adeshak: {commander}</span>
                 </div>
               </div>
 
