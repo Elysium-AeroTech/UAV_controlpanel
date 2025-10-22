@@ -281,6 +281,14 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="safety" className="mt-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold">Safety</h2>
+                  <MastercodeInput
+                    pageTitle="Safety"
+                    isLocked={pageLocks.safety}
+                    onLockChange={(locked) => updatePageLock("safety", locked)}
+                  />
+                </div>
                 <SafetyChecksPanel
                   verified={safetyVerified}
                   setVerified={setSafetyVerified}
