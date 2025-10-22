@@ -296,15 +296,13 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="comms" className="mt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Communication</h2>
-                  <MastercodeInput
-                    pageTitle="Communication"
-                    isLocked={pageLocks.comms}
-                    onLockChange={(locked) => updatePageLock("comms", locked)}
-                  />
-                </div>
-                <CommunicationPanel />
+                <MastercodeInput
+                  pageTitle="Communication"
+                  isLocked={pageLocks.comms}
+                  onLockChange={(locked) => updatePageLock("comms", locked)}
+                >
+                  <CommunicationPanel />
+                </MastercodeInput>
               </TabsContent>
 
               <TabsContent value="launch" className="mt-4">
