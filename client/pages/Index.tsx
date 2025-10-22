@@ -306,23 +306,21 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="launch" className="mt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Launch</h2>
-                  <MastercodeInput
-                    pageTitle="Launch"
-                    isLocked={pageLocks.launch}
-                    onLockChange={(locked) => updatePageLock("launch", locked)}
+                <MastercodeInput
+                  pageTitle="Launch"
+                  isLocked={pageLocks.launch}
+                  onLockChange={(locked) => updatePageLock("launch", locked)}
+                >
+                  <LaunchPanel
+                    authOk={authOk}
+                    safetyVerified={safetyVerified}
+                    safetyArmed={safetyArmed}
+                    telemetryOk={health === "OK"}
+                    batteryPct={battery}
+                    navLocked={true}
+                    targetLocked={targetLocked}
                   />
-                </div>
-                <LaunchPanel
-                  authOk={authOk}
-                  safetyVerified={safetyVerified}
-                  safetyArmed={safetyArmed}
-                  telemetryOk={health === "OK"}
-                  batteryPct={battery}
-                  navLocked={true}
-                  targetLocked={targetLocked}
-                />
+                </MastercodeInput>
               </TabsContent>
             </Tabs>
           </>
