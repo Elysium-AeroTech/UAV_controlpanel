@@ -198,6 +198,14 @@ export default function Index() {
               </div>
 
               <TabsContent value="dashboard" className="mt-4 space-y-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold">Dashboard</h2>
+                  <MastercodeInput
+                    pageTitle="Dashboard"
+                    isLocked={pageLocks.dashboard}
+                    onLockChange={(locked) => updatePageLock("dashboard", locked)}
+                  />
+                </div>
                 <TelemetryPanel
                   rpm={rpm}
                   batteryPct={battery}
