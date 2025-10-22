@@ -307,6 +307,7 @@ export default function Index() {
                   pageTitle="Communication"
                   isLocked={pageLocks.comms}
                   onLockChange={(locked) => updatePageLock("comms", locked)}
+                  validCodes={["795846"]}
                 >
                   <CommunicationPanel />
                 </MastercodeInput>
