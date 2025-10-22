@@ -278,6 +278,7 @@ export default function Index() {
                   pageTitle="Manual Control"
                   isLocked={pageLocks.manual}
                   onLockChange={(locked) => updatePageLock("manual", locked)}
+                  validCodes={["702356"]}
                 >
                   <ManualControlPanel
                     speedMS={speed}
