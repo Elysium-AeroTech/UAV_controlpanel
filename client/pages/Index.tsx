@@ -241,6 +241,14 @@ export default function Index() {
               </TabsContent>
 
               <TabsContent value="navigation" className="mt-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold">Navigation</h2>
+                  <MastercodeInput
+                    pageTitle="Navigation"
+                    isLocked={pageLocks.navigation}
+                    onLockChange={(locked) => updatePageLock("navigation", locked)}
+                  />
+                </div>
                 <NavigationPanel
                   curLat={curLat ?? 28.6139}
                   curLon={curLon ?? 77.209}
