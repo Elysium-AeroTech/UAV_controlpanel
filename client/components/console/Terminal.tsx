@@ -16,7 +16,7 @@ export function Terminal({
     return (
       <Button
         onClick={() => setIsMinimized(false)}
-        className="fixed bottom-4 right-4 gap-2 z-40"
+        className="fixed bottom-4 left-4 gap-2 z-40"
         variant="outline"
       >
         <ChevronUp className="h-4 w-4" />
@@ -26,7 +26,7 @@ export function Terminal({
   }
 
   return (
-    <Card className="fixed bottom-4 right-4 w-96 h-64 flex flex-col z-40 bg-background border border-primary/20">
+    <Card className="fixed bottom-4 left-4 w-96 h-64 flex flex-col z-40 bg-background border border-primary/20">
       <CardHeader className="py-2 pb-2 border-b flex flex-row items-center justify-between">
         <CardTitle className="text-xs">Terminal</CardTitle>
         <div className="flex gap-1">
