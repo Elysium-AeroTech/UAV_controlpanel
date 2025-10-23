@@ -2,7 +2,10 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
-import { handleExecutePython, handleExecutePageScript } from "./routes/execute-python";
+import {
+  handleExecutePython,
+  handleExecutePageScript,
+} from "./routes/execute-python";
 
 export function createServer() {
   const app = express();
