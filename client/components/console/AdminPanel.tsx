@@ -76,6 +76,33 @@ export function AdminPanel() {
     setTimeout(() => setMessage(null), 2000);
   };
 
+  const handleRunScript = async (filename: string) => {
+    setIsRunning(true);
+    setExecutionOutput("");
+    try {
+      const response = await fetch("/api/execute-python", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ script: filename }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setExecutionOutput(data.output || "Script executed successfully");
+        setMessage({ type: "success", text: "Script executed" });
+      } else {
+        setExecutionOutput(data.error || "Unknown error");
+        setMessage({ type: "error", text: "Script execution failed" });
+      }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Unknown error";
+      setExecutionOutput(errorMsg);
+      setMessage({ type: "error", text: "Failed to execute script" });
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
   const filesByPage = PAGES.reduce(
     (acc, page) => {
       acc[page] = files.filter((f) => f.page === page);
