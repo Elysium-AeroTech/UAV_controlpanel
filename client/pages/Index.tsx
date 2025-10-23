@@ -53,6 +53,7 @@ export default function Index() {
   const [speed, setSpeed] = useState(0);
   const [motorTemp, setMotorTemp] = useState(0);
   const [altitude, setAltitude] = useState(0);
+  const [powerSource, setPowerSource] = useState("Grid");
   const health: Health =
     motorTemp < 90 && battery > 40
       ? "OK"
