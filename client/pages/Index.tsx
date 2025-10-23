@@ -87,6 +87,18 @@ export default function Index() {
     setPageLocks((prev) => ({ ...prev, [page]: locked }));
   };
 
+  // Terminal logs state
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
+
+  const addLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setTerminalLogs((prev) => [...prev, `[${timestamp}] ${message}`]);
+  };
+
+  const clearLogs = () => {
+    setTerminalLogs([]);
+  };
+
   // Safety shared state
   const [safetyVerified, setSafetyVerified] = useState(false);
   const [safetyArmed, setSafetyArmed] = useState(false);
