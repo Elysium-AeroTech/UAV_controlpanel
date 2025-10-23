@@ -330,11 +330,9 @@ export default function Index() {
                 </MastercodeInput>
               </TabsContent>
 
-              {commander === "prerit roshan" && (
-                <TabsContent value="admin" className="mt-4">
-                  <AdminPanel />
-                </TabsContent>
-              )}
+              <TabsContent value="admin" className="mt-4">
+                <AdminPanel />
+              </TabsContent>
             </Tabs>
           </>
         )}
