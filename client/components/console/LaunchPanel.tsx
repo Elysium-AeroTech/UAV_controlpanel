@@ -27,6 +27,7 @@ export function LaunchPanel({
   batteryPct,
   navLocked,
   targetLocked,
+  powerSource = "Grid",
 }: {
   authOk: boolean;
   safetyVerified: boolean;
@@ -35,6 +36,7 @@ export function LaunchPanel({
   batteryPct: number;
   navLocked: boolean;
   targetLocked: boolean;
+  powerSource?: string;
 }) {
   // Arm-to-Launch PIN
   const [pin, setPin] = useState("");
