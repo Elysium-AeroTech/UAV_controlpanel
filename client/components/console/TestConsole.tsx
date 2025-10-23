@@ -33,6 +33,8 @@ export function TestConsole({
   setAltitude,
   requireTwoPerson,
   setRequireTwoPerson,
+  powerSource,
+  setPowerSource,
 }: {
   rpm: number;
   battery: number;
@@ -46,6 +48,8 @@ export function TestConsole({
   setAltitude: (n: number) => void;
   requireTwoPerson: boolean;
   setRequireTwoPerson: (b: boolean) => void;
+  powerSource: string;
+  setPowerSource: (source: string) => void;
 }) {
   const [open, setOpen] = useState(false);
 
