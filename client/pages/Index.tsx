@@ -210,7 +210,6 @@ export default function Index() {
                   <TabsTrigger value="safety">Safety</TabsTrigger>
                   <TabsTrigger value="comms">Communication</TabsTrigger>
                   <TabsTrigger value="launch">Launch</TabsTrigger>
-                  <TabsTrigger value="admin">Admin</TabsTrigger>
                 </TabsList>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
                   <span>Adeshak: {commander}</span>
