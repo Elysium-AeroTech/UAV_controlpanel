@@ -61,3 +61,43 @@ export const handleExecutePython: RequestHandler = (req, res) => {
     } as ExecutePythonResponse);
   }
 };
+
+export const handleExecutePageScript: RequestHandler = (req, res) => {
+  const { page } = req.body as { page: string };
+
+  if (!page) {
+    return res.status(400).json({
+      success: false,
+      error: "Page parameter is required",
+    } as ExecutePythonResponse);
+  }
+
+  try {
+    const scriptsDir = path.join(process.cwd(), "python_scripts", page);
+    const mainScriptPath = path.join(scriptsDir, "main.py");
+
+    if (!fs.existsSync(mainScriptPath)) {
+      return res.status(404).json({
+        success: false,
+        error: `No main.py found for page: ${page}`,
+      } as ExecutePythonResponse);
+    }
+
+    const command = `python "${mainScriptPath}"`;
+    const output = execSync(command, {
+      encoding: "utf-8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
+
+    res.json({
+      success: true,
+      output,
+    } as ExecutePythonResponse);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    res.status(500).json({
+      success: false,
+      error: errorMessage,
+    } as ExecutePythonResponse);
+  }
+};
