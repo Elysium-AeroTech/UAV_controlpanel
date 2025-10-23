@@ -82,6 +82,19 @@ export function TestConsole({
             </p>
             <Separator />
             <div>
+              <Label>Power Source</Label>
+              <Select value={powerSource} onValueChange={setPowerSource}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Grid">Grid</SelectItem>
+                  <SelectItem value="Battery">Battery</SelectItem>
+                  <SelectItem value="Backup">Backup</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
               <Label>Inject RPM</Label>
               <Input
                 type="number"
