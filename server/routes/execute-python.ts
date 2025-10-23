@@ -25,10 +25,13 @@ export const handleExecutePython: RequestHandler = (req, res) => {
   }
 
   try {
-    const scriptsDir = path.join(process.cwd(), "uploaded_scripts");
+    const scriptsDir = path.join(process.cwd(), "python_scripts");
 
     if (!fs.existsSync(scriptsDir)) {
-      fs.mkdirSync(scriptsDir, { recursive: true });
+      return res.status(404).json({
+        success: false,
+        error: "python_scripts directory not found",
+      } as ExecutePythonResponse);
     }
 
     const scriptPath = path.join(scriptsDir, script);
