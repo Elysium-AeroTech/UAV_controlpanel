@@ -67,7 +67,7 @@ export function LaunchPanel({
   const preconds = [
     {
       label: "POWER ROUTE",
-      value: "GRID / BATTERY / BACKUP",
+      value: powerSource,
       ok: true,
       icon: Battery,
     },
