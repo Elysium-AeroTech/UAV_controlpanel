@@ -13,11 +13,11 @@ Place your Python scripts in this folder to use them with the application.
 1. Create a Python script in this folder (e.g., `dashboard.py`)
 2. From the application, call the backend API to execute it:
    ```javascript
-   fetch('/api/execute-python', {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json' },
-     body: JSON.stringify({ script: 'dashboard.py' })
-   })
+   fetch("/api/execute-python", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ script: "dashboard.py" }),
+   });
    ```
 3. The output will appear in the Terminal on the right side of the screen
 

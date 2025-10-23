@@ -44,7 +44,10 @@ export const handleExecutePython: RequestHandler = (req, res) => {
     }
 
     const command = `python "${scriptPath}" ${args.map((arg) => `"${arg}"`).join(" ")}`;
-    const output = execSync(command, { encoding: "utf-8", maxBuffer: 10 * 1024 * 1024 });
+    const output = execSync(command, {
+      encoding: "utf-8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
 
     res.json({
       success: true,

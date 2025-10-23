@@ -235,13 +235,16 @@ export default function Index() {
                     <Card>
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                          <ShieldCheck className="h-5 w-5 text-primary" /> Status
+                          <ShieldCheck className="h-5 w-5 text-primary" />{" "}
+                          Status
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
                         <div className="p-3 rounded border bg-secondary/30">
                           <div className="text-muted-foreground">Login</div>
-                          <div className="font-mono">{authOk ? "OK" : "FAIL"}</div>
+                          <div className="font-mono">
+                            {authOk ? "OK" : "FAIL"}
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -264,7 +267,9 @@ export default function Index() {
                 <MastercodeInput
                   pageTitle="Navigation"
                   isLocked={pageLocks.navigation}
-                  onLockChange={(locked) => updatePageLock("navigation", locked)}
+                  onLockChange={(locked) =>
+                    updatePageLock("navigation", locked)
+                  }
                   validCodes={["351478"]}
                 >
                   <NavigationPanel
@@ -342,7 +347,6 @@ export default function Index() {
                   />
                 </MastercodeInput>
               </TabsContent>
-
             </Tabs>
           </>
         )}

@@ -71,7 +71,9 @@ export function MastercodeInput({
       {isLocked && !showInput && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>This page is locked. Enter code to unlock.</AlertDescription>
+          <AlertDescription>
+            This page is locked. Enter code to unlock.
+          </AlertDescription>
         </Alert>
       )}
 

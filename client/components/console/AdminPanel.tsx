@@ -3,7 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, Trash2, CheckCircle2, AlertCircle, Play } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,7 +38,10 @@ export function AdminPanel() {
     const stored = localStorage.getItem("uploadedFiles");
     return stored ? JSON.parse(stored) : [];
   });
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
   const [executionOutput, setExecutionOutput] = useState<string>("");
   const [isRunning, setIsRunning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +54,10 @@ export function AdminPanel() {
     }
 
     if (!file.name.endsWith(".py")) {
-      setMessage({ type: "error", text: "Only Python files (.py) are allowed" });
+      setMessage({
+        type: "error",
+        text: "Only Python files (.py) are allowed",
+      });
       return;
     }
 
@@ -59,7 +71,10 @@ export function AdminPanel() {
     setFiles(updatedFiles);
     localStorage.setItem("uploadedFiles", JSON.stringify(updatedFiles));
 
-    setMessage({ type: "success", text: `${file.name} uploaded for ${selectedPage}` });
+    setMessage({
+      type: "success",
+      text: `${file.name} uploaded for ${selectedPage}`,
+    });
     setSelectedPage("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -132,7 +147,11 @@ export function AdminPanel() {
             </CardHeader>
             <CardContent className="space-y-4">
               {message && (
-                <Alert variant={message.type === "success" ? "default" : "destructive"}>
+                <Alert
+                  variant={
+                    message.type === "success" ? "default" : "destructive"
+                  }
+                >
                   {message.type === "success" ? (
                     <CheckCircle2 className="h-4 w-4" />
                   ) : (
@@ -147,7 +166,9 @@ export function AdminPanel() {
                   <Label>Select Page</Label>
                   <Select
                     value={selectedPage}
-                    onValueChange={(value) => setSelectedPage(value as PageType)}
+                    onValueChange={(value) =>
+                      setSelectedPage(value as PageType)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Choose a page..." />
@@ -174,7 +195,9 @@ export function AdminPanel() {
                       className="flex-1"
                     />
                   </div>
-                  <div className="text-xs text-muted-foreground">Only .py files are allowed</div>
+                  <div className="text-xs text-muted-foreground">
+                    Only .py files are allowed
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -186,7 +209,9 @@ export function AdminPanel() {
             </CardHeader>
             <CardContent>
               {PAGES.length === 0 ? (
-                <div className="text-center py-6 text-muted-foreground">No scripts uploaded yet</div>
+                <div className="text-center py-6 text-muted-foreground">
+                  No scripts uploaded yet
+                </div>
               ) : (
                 <div className="space-y-4">
                   {PAGES.map((page) => (
@@ -195,7 +220,9 @@ export function AdminPanel() {
                         {page.charAt(0).toUpperCase() + page.slice(1)}
                       </h3>
                       {filesByPage[page].length === 0 ? (
-                        <div className="text-sm text-muted-foreground">No scripts uploaded</div>
+                        <div className="text-sm text-muted-foreground">
+                          No scripts uploaded
+                        </div>
                       ) : (
                         <div className="space-y-2">
                           {filesByPage[page].map((file) => (
@@ -204,8 +231,12 @@ export function AdminPanel() {
                               className="flex items-center justify-between bg-secondary/30 p-3 rounded"
                             >
                               <div>
-                                <div className="text-sm font-mono">{file.filename}</div>
-                                <div className="text-xs text-muted-foreground">{file.uploadedAt}</div>
+                                <div className="text-sm font-mono">
+                                  {file.filename}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {file.uploadedAt}
+                                </div>
                               </div>
                               <Button
                                 variant="destructive"
@@ -235,7 +266,11 @@ export function AdminPanel() {
             </CardHeader>
             <CardContent className="space-y-4">
               {message && (
-                <Alert variant={message.type === "success" ? "default" : "destructive"}>
+                <Alert
+                  variant={
+                    message.type === "success" ? "default" : "destructive"
+                  }
+                >
                   {message.type === "success" ? (
                     <CheckCircle2 className="h-4 w-4" />
                   ) : (
@@ -252,7 +287,9 @@ export function AdminPanel() {
                       {page.charAt(0).toUpperCase() + page.slice(1)}
                     </h3>
                     {filesByPage[page].length === 0 ? (
-                      <div className="text-sm text-muted-foreground">No scripts uploaded</div>
+                      <div className="text-sm text-muted-foreground">
+                        No scripts uploaded
+                      </div>
                     ) : (
                       <div className="space-y-2">
                         {filesByPage[page].map((file) => (
@@ -261,8 +298,12 @@ export function AdminPanel() {
                             className="flex items-center justify-between bg-secondary/30 p-3 rounded"
                           >
                             <div className="flex-1">
-                              <div className="text-sm font-mono">{file.filename}</div>
-                              <div className="text-xs text-muted-foreground">{file.uploadedAt}</div>
+                              <div className="text-sm font-mono">
+                                {file.filename}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {file.uploadedAt}
+                              </div>
                             </div>
                             <Button
                               size="sm"
