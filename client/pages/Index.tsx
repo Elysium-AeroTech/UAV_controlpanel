@@ -346,6 +346,8 @@ export default function Index() {
         )}
       </main>
 
+      <Terminal logs={terminalLogs} onClear={clearLogs} />
+
       <TestConsole
         rpm={rpm}
         battery={battery}
