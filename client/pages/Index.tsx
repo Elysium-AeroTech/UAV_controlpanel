@@ -362,6 +362,8 @@ export default function Index() {
         setAltitude={setAltitude}
         requireTwoPerson={false}
         setRequireTwoPerson={() => {}}
+        powerSource={powerSource}
+        setPowerSource={setPowerSource}
       />
     </div>
   );
