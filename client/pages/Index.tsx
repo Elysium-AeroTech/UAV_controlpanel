@@ -336,8 +336,9 @@ export default function Index() {
                     safetyArmed={safetyArmed}
                     telemetryOk={health === "OK"}
                     batteryPct={battery}
-                    navLocked={true}
+                    navLocked={!pageLocks.navigation}
                     targetLocked={targetLocked}
+                    powerSource={powerSource}
                   />
                 </MastercodeInput>
               </TabsContent>
