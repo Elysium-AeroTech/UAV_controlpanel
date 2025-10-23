@@ -33,6 +33,8 @@ export function AdminPanel() {
     return stored ? JSON.parse(stored) : [];
   });
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [executionOutput, setExecutionOutput] = useState<string>("");
+  const [isRunning, setIsRunning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
