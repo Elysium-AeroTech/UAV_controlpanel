@@ -22,5 +22,7 @@ export function createServer() {
 
   app.post("/api/execute-python", handleExecutePython);
 
+  app.post("/api/execute-page-script", handleExecutePageScript);
+
   return app;
 }
