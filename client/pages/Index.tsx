@@ -6,52 +6,99 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, KeyRound, User, Users } from "lucide-react";
-import { TelemetryPanel, type Health } from "@/components/console/TelemetryPanel";
-import { DestinationPanel } from "@/components/console/DestinationPanel";
-import { SafetyPanel } from "@/components/console/SafetyPanel";
-import { LaunchSequencePanel } from "@/components/console/LaunchSequencePanel";
+import { ShieldCheck, User } from "lucide-react";
+import {
+  TelemetryPanel,
+  type Health,
+} from "@/components/console/TelemetryPanel";
+// // import { DestinationPanel } from "@/components/console/DestinationPanel";
+import { NavigationPanel } from "@/components/console/NavigationPanel";
+import { ArmingPanel } from "@/components/console/ArmingPanel";
+import { SafetyChecksPanel } from "@/components/console/SafetyChecksPanel";
+import { CommunicationPanel } from "@/components/console/CommunicationPanel";
+import { LaunchPanel } from "@/components/console/LaunchPanel";
 import { ManualControlPanel } from "@/components/console/ManualControlPanel";
 import { TestConsole } from "@/components/console/TestConsole";
 import { TopNav } from "@/components/console/TopNav";
+import { MastercodeInput } from "@/components/console/MastercodeInput";
+import { Terminal } from "@/components/console/Terminal";
 
-const HARD = {
-  email: "commander.prerit@elysium.io",
-  password: "Prerit@9807",
-  commanderCode: "980752",
-  preritCode: "980752",
-  raghavCode: "13579",
-};
+const CREW = [
+  { name: "prerit roshan", password: "980752" },
+  { name: "raghav jindal", password: "190508." },
+  { name: "Duclipse", password: "2302" },
+  { name: "Dev@2106", password: "2389" },
+  { name: "nisox", password: "0994" },
+  { name: "sanvi", password: "3867" },
+  { name: "vishwas", password: "3223" },
+  { name: "demo", password: "12345678" },
+] as const;
 
 export default function Index() {
   // Auth state
-  const [email, setEmail] = useState("");
+  const [commander, setCommander] = useState<string>("");
   const [password, setPassword] = useState("");
-  const [commanderCode, setCommanderCode] = useState("");
-  const [prerit, setPrerit] = useState("");
-  const [raghav, setRaghav] = useState("");
-  const [requireTwoPerson, setRequireTwoPerson] = useState(true);
 
-  const emailOk = email === HARD.email && password === HARD.password;
-  const commanderOk = commanderCode === HARD.commanderCode;
-  const twoOk = prerit === HARD.preritCode && raghav === HARD.raghavCode;
-  const isAuthed = emailOk && commanderOk && (requireTwoPerson ? twoOk : true);
+  const authOk = CREW.some(
+    (c) => c.name === commander && c.password === password,
+  );
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [loginProgress, setLoginProgress] = useState(0);
+  const isAuthed = loggedIn;
 
   // Telemetry state (live or test-injected)
-  const [rpm, setRpm] = useState(6200);
-  const [battery, setBattery] = useState(88);
-  const [speed, setSpeed] = useState(120);
-  const [motorTemp, setMotorTemp] = useState(72);
-  const [altitude, setAltitude] = useState(1500);
-  const health: Health = motorTemp < 90 && battery > 40 ? "OK" : motorTemp < 120 ? "Warning" : "Critical";
+  const [rpm, setRpm] = useState(0);
+  const [battery, setBattery] = useState(0);
+  const [speed, setSpeed] = useState(0);
+  const [motorTemp, setMotorTemp] = useState(0);
+  const [altitude, setAltitude] = useState(0);
+  const [powerSource, setPowerSource] = useState("Grid");
+  const health: Health =
+    motorTemp < 90 && battery > 40
+      ? "OK"
+      : motorTemp < 120
+        ? "Warning"
+        : "Critical";
 
   // Destination
   const [lat, setLat] = useState(28.6139);
-  const [lon, setLon] = useState(77.2090);
+  const [lon, setLon] = useState(77.209);
   const [curLat, setCurLat] = useState<number | null>(null);
   const [curLon, setCurLon] = useState<number | null>(null);
+  const [targetLocked, setTargetLocked] = useState(false);
 
-  const systemStatus = useMemo(() => (isAuthed ? "SECURE" : "LOCKED"), [isAuthed]);
+  const systemStatus = useMemo(
+    () => (isAuthed ? "SECURE" : loggingIn ? "VERIFYING" : "LOCKED"),
+    [isAuthed, loggingIn],
+  );
+
+  // Page mastercode lock state
+  const [pageLocks, setPageLocks] = useState({
+    dashboard: false,
+    arming: false,
+    navigation: false,
+    manual: false,
+    safety: false,
+    comms: false,
+    launch: false,
+  });
+
+  const updatePageLock = (page: keyof typeof pageLocks, locked: boolean) => {
+    setPageLocks((prev) => ({ ...prev, [page]: locked }));
+  };
+
+  // Terminal logs state
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
+
+  const addLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setTerminalLogs((prev) => [...prev, `[${timestamp}] ${message}`]);
+  };
+
+  const clearLogs = () => {
+    setTerminalLogs([]);
+  };
 
   // Safety shared state
   const [safetyVerified, setSafetyVerified] = useState(false);
@@ -59,46 +106,97 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
-      <TopNav status={systemStatus} />
+      <TopNav status={systemStatus} commanderName={commander || undefined} />
       <main className="container mx-auto px-4 py-6">
         {!isAuthed ? (
           <Card className="max-w-3xl mx-auto">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Authorization Required</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-primary" /> Authorization
+                Required
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
-              <div className="grid md:grid-cols-3 gap-3">
+              <div className="grid md:grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label>Email</Label>
-                  <Input placeholder="commander@domain" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Label>Adeshak</Label>
+                  <Input
+                    placeholder="Enter Adeshak name"
+                    value={commander}
+                    onChange={(e) => setCommander(e.target.value)}
+                  />
+                  <div className="text-xs text-muted-foreground">
+                    Type the name exactly
+                  </div>
+                </div>
+                <div className="space-y-2">
                   <Label>Password</Label>
-                  <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                  <div className="text-xs text-muted-foreground">Login as Commander</div>
-                  <Badge variant={emailOk ? "secondary" : "outline"} className="mt-1"><User className="h-3 w-3 mr-1" /> {emailOk ? "Validated" : "Pending"}</Badge>
-                </div>
-                <div className="space-y-2">
-                  <Label>Commander's Code</Label>
-                  <Input placeholder="Enter code" value={commanderCode} onChange={(e) => setCommanderCode(e.target.value)} />
-                  <div className="text-xs text-muted-foreground">Second step</div>
-                  <Badge variant={commanderOk ? "secondary" : "outline"} className="mt-6"><KeyRound className="h-3 w-3 mr-1" /> {commanderOk ? "Verified" : "Required"}</Badge>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Two-Person Consent</Label>
-                    <Badge variant={requireTwoPerson ? "secondary" : "outline"}>{requireTwoPerson ? "ON" : "OFF"}</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Input placeholder="Prerit's Code" value={prerit} onChange={(e) => setPrerit(e.target.value)} disabled={!requireTwoPerson} />
-                    <Input placeholder="Raghav's Code" value={raghav} onChange={(e) => setRaghav(e.target.value)} disabled={!requireTwoPerson} />
-                  </div>
-                  <div className="text-xs text-muted-foreground">Both must authenticate</div>
-                  <Badge variant={requireTwoPerson ? (twoOk ? "secondary" : "outline") : "secondary"} className="mt-1"><Users className="h-3 w-3 mr-1" /> {requireTwoPerson ? (twoOk ? "Consent Granted" : "Awaiting Codes") : "Bypassed (Test)"}</Badge>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <Badge
+                    variant={authOk ? "secondary" : "outline"}
+                    className="mt-6"
+                  >
+                    <User className="h-3 w-3 mr-1" />{" "}
+                    {authOk ? "Validated" : "Pending"}
+                  </Badge>
                 </div>
               </div>
               <Separator />
-              <div className="flex justify-end">
-                <Button disabled={!isAuthed}>Enter Command</Button>
+              <div className="flex items-center justify-between">
+                {loggingIn ? (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="h-3 w-3 rounded-full bg-primary animate-ping" />
+                    Verifying credentials...
+                  </div>
+                ) : (
+                  <div className="text-xs text-muted-foreground">
+                    Enter valid credentials to continue.
+                  </div>
+                )}
+                <Button
+                  disabled={!authOk || loggingIn}
+                  onClick={() => {
+                    if (!authOk) return;
+                    setLoggingIn(true);
+                    setLoginProgress(0);
+                    const id = window.setInterval(() => {
+                      setLoginProgress((p) => {
+                        const n = Math.min(
+                          100,
+                          p + Math.floor(10 + Math.random() * 20),
+                        );
+                        if (n >= 100) {
+                          clearInterval(id);
+                          setTimeout(() => {
+                            setLoggedIn(true);
+                            setLoggingIn(false);
+                          }, 300);
+                        }
+                        return n;
+                      });
+                    }, 150);
+                  }}
+                >
+                  Enter Command
+                </Button>
               </div>
+              {loggingIn ? (
+                <div className="mt-3">
+                  <div className="h-2 w-full overflow-hidden rounded bg-secondary">
+                    <div
+                      className="h-2 bg-primary"
+                      style={{
+                        width: `${Math.max(10, loginProgress)}%`,
+                        transition: "width 0.15s ease",
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         ) : (
@@ -107,74 +205,154 @@ export default function Index() {
               <div className="flex items-center justify-between">
                 <TabsList>
                   <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-                  <TabsTrigger value="safety">Safety & Arming</TabsTrigger>
-                  <TabsTrigger value="destination">Destination</TabsTrigger>
-                  <TabsTrigger value="manual">Manual Control</TabsTrigger>
-                  <TabsTrigger value="launch">Launch Sequence</TabsTrigger>
+                  <TabsTrigger value="arming">Arming</TabsTrigger>
+                  <TabsTrigger value="navigation">Navigation</TabsTrigger>
+                  <TabsTrigger value="manual">Manual</TabsTrigger>
+                  <TabsTrigger value="safety">Safety</TabsTrigger>
+                  <TabsTrigger value="comms">Communication</TabsTrigger>
+                  <TabsTrigger value="launch">Launch</TabsTrigger>
                 </TabsList>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
-                  <span>Commander: prerit roshan</span>
-                  <span>•</span>
-                  <span>Consent: {requireTwoPerson ? (twoOk ? "Active" : "Required") : "Disabled"}</span>
+                  <span>Adeshak: {commander}</span>
                 </div>
               </div>
 
-              <TabsContent value="dashboard" className="mt-4 space-y-4">
-                <TelemetryPanel rpm={rpm} batteryPct={battery} speed={speed} motorTemp={motorTemp} health={health} />
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Status</CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
-                    <div className="p-3 rounded border bg-secondary/30">
-                      <div className="text-muted-foreground">Login</div>
-                      <div className="font-mono">{emailOk ? "OK" : "FAIL"}</div>
-                    </div>
-                    <div className="p-3 rounded border bg-secondary/30">
-                      <div className="text-muted-foreground">Commander Code</div>
-                      <div className="font-mono">{commanderOk ? "OK" : "FAIL"}</div>
-                    </div>
-                    <div className="p-3 rounded border bg-secondary/30">
-                      <div className="text-muted-foreground">Two-Person</div>
-                      <div className="font-mono">{requireTwoPerson ? (twoOk ? "OK" : "WAIT") : "OFF"}</div>
-                    </div>
-                  </CardContent>
-                </Card>
+              <TabsContent value="dashboard" className="mt-4">
+                <MastercodeInput
+                  pageTitle="Dashboard"
+                  isLocked={pageLocks.dashboard}
+                  onLockChange={(locked) => updatePageLock("dashboard", locked)}
+                  validCodes={["980752", "13579"]}
+                >
+                  <div className="space-y-4">
+                    <TelemetryPanel
+                      rpm={rpm}
+                      batteryPct={battery}
+                      speed={speed}
+                      motorTemp={motorTemp}
+                      health={health}
+                    />
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <ShieldCheck className="h-5 w-5 text-primary" />{" "}
+                          Status
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="grid sm:grid-cols-3 gap-3 text-sm">
+                        <div className="p-3 rounded border bg-secondary/30">
+                          <div className="text-muted-foreground">Login</div>
+                          <div className="font-mono">
+                            {authOk ? "OK" : "FAIL"}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </MastercodeInput>
               </TabsContent>
 
-              <TabsContent value="safety" className="mt-4">
-                <SafetyPanel
-                  verified={safetyVerified}
-                  setVerified={setSafetyVerified}
-                  armed={safetyArmed}
-                  setArmed={setSafetyArmed}
-                />
+              <TabsContent value="arming" className="mt-4">
+                <MastercodeInput
+                  pageTitle="Arming"
+                  isLocked={pageLocks.arming}
+                  onLockChange={(locked) => updatePageLock("arming", locked)}
+                  validCodes={["7825"]}
+                >
+                  <ArmingPanel armed={safetyArmed} setArmed={setSafetyArmed} />
+                </MastercodeInput>
               </TabsContent>
 
-              <TabsContent value="destination" className="mt-4">
-                <DestinationPanel lat={lat} lon={lon} curLat={curLat} curLon={curLon} onSet={(la, lo) => { setLat(la); setLon(lo); }} onSetCurrent={(cla, clo) => { setCurLat(cla); setCurLon(clo); }} />
+              <TabsContent value="navigation" className="mt-4">
+                <MastercodeInput
+                  pageTitle="Navigation"
+                  isLocked={pageLocks.navigation}
+                  onLockChange={(locked) =>
+                    updatePageLock("navigation", locked)
+                  }
+                  validCodes={["351478"]}
+                >
+                  <NavigationPanel
+                    curLat={curLat ?? 28.6139}
+                    curLon={curLon ?? 77.209}
+                    speedMS={speed}
+                    lat={lat}
+                    lon={lon}
+                    onSet={(la, lo) => {
+                      setLat(la);
+                      setLon(lo);
+                    }}
+                    locked={targetLocked}
+                    onLockedChange={setTargetLocked}
+                  />
+                </MastercodeInput>
               </TabsContent>
 
               <TabsContent value="manual" className="mt-4">
-                <ManualControlPanel speedMS={speed} altitudeM={altitude} powerPct={battery} />
+                <MastercodeInput
+                  pageTitle="Manual Control"
+                  isLocked={pageLocks.manual}
+                  onLockChange={(locked) => updatePageLock("manual", locked)}
+                  validCodes={["702356"]}
+                >
+                  <ManualControlPanel
+                    speedMS={speed}
+                    altitudeM={altitude}
+                    powerPct={battery}
+                  />
+                </MastercodeInput>
               </TabsContent>
+
+              <TabsContent value="safety" className="mt-4">
+                <MastercodeInput
+                  pageTitle="Safety"
+                  isLocked={pageLocks.safety}
+                  onLockChange={(locked) => updatePageLock("safety", locked)}
+                  validCodes={["2413"]}
+                >
+                  <SafetyChecksPanel
+                    verified={safetyVerified}
+                    setVerified={setSafetyVerified}
+                  />
+                </MastercodeInput>
+              </TabsContent>
+
+              <TabsContent value="comms" className="mt-4">
+                <MastercodeInput
+                  pageTitle="Communication"
+                  isLocked={pageLocks.comms}
+                  onLockChange={(locked) => updatePageLock("comms", locked)}
+                  validCodes={["795846"]}
+                >
+                  <CommunicationPanel />
+                </MastercodeInput>
+              </TabsContent>
+
               <TabsContent value="launch" className="mt-4">
-                <LaunchSequencePanel
-                  emailOk={emailOk}
-                  commanderOk={commanderOk}
-                  consentOk={requireTwoPerson ? twoOk : true}
-                  safetyVerified={safetyVerified}
-                  safetyArmed={safetyArmed}
-                  distanceKm={curLat != null && curLon != null ? (function(){
-                    const R=6371; const dLat=((lat-curLat)*Math.PI)/180; const dLon=((lon-curLon)*Math.PI)/180; const A=Math.sin(dLat/2)**2+Math.cos(curLat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLon/2)**2; const c=2*Math.atan2(Math.sqrt(A),Math.sqrt(1-A)); return R*c;})() : null}
-                  telemetryOk={health === "OK"}
-                  onLaunch={() => alert("Launch sequence initiated (demo)")}
-                />
+                <MastercodeInput
+                  pageTitle="Launch"
+                  isLocked={pageLocks.launch}
+                  onLockChange={(locked) => updatePageLock("launch", locked)}
+                  validCodes={["1458"]}
+                >
+                  <LaunchPanel
+                    authOk={authOk}
+                    safetyVerified={safetyVerified}
+                    safetyArmed={safetyArmed}
+                    telemetryOk={health === "OK"}
+                    batteryPct={battery}
+                    navLocked={!pageLocks.navigation}
+                    targetLocked={targetLocked}
+                    powerSource={powerSource}
+                  />
+                </MastercodeInput>
               </TabsContent>
             </Tabs>
           </>
         )}
       </main>
+
+      <Terminal logs={terminalLogs} onClear={clearLogs} />
 
       <TestConsole
         rpm={rpm}
@@ -187,8 +365,10 @@ export default function Index() {
         setSpeed={setSpeed}
         setMotorTemp={setMotorTemp}
         setAltitude={setAltitude}
-        requireTwoPerson={requireTwoPerson}
-        setRequireTwoPerson={setRequireTwoPerson}
+        requireTwoPerson={false}
+        setRequireTwoPerson={() => {}}
+        powerSource={powerSource}
+        setPowerSource={setPowerSource}
       />
     </div>
   );
